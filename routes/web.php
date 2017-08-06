@@ -40,8 +40,14 @@ Route::get('spv-manajemen', ['as' => 'spv-manajemen', 'uses' => 'PKWTController@
 Route::post('getClientSPV', ['as' => 'getClientSPV', 'uses' => 'PKWTController@proses']);
 Route::post('changeSPV', ['as' => 'changeSPV', 'uses' => 'PKWTController@changeSPV']);
 
-Route::resource('masterjabatan', 'MasterJabatanController');
-Route::get('masterjabatan/hapusjabatan/{id}', ['as'=>'masterjabatan.hapusjabatan', 'uses'=>'MasterJabatanController@hapusJabatan']);
+//----- Master Jabatan -----//
+Route::get('masterjabatan', 'MasterJabatanController@create')->name('masterjabatan.create');
+Route::post('masterjabatan', 'MasterJabatanController@store')->name('masterjabatan.store');
+Route::get('masterjabatan/{id}', 'MasterJabatanController@edit')->name('masterjabatan.edit');
+Route::patch('masterjabatan/{id}', 'MasterJabatanController@update')->name('masterjabatan.update');
+Route::get('masterjabatan/hapusjabatan/{id}', 'MasterJabatanController@hapusJabatan')->name('masterjabatan.hapusjabatan');
+//----- Master Jabatan -----//
+
 
 ////// Buat Laporan //////
 Route::get('laporan-pegawai', ['as' => 'laporanpegawai', 'uses' => 'LaporanPegawaiController@index']);
