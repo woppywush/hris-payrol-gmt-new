@@ -20,7 +20,7 @@ class CreateHrKondisiKesehatanTable extends Migration
           $table->integer('berat_badan')->unsigned()->nullable();
           $table->string('warna_rambut')->nullable();
           $table->string('warna_mata')->nullable();
-          $table->integer('beracamata')->unsigned()->nullable();
+          $table->integer('berkacamata')->unsigned()->nullable();
           $table->integer('merokok')->unsigned()->nullable();
           $table->timestamps();
 

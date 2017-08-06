@@ -8,7 +8,7 @@ class HrKondisiKesehatan extends Model
 {
     protected $table = 'hr_kondisi_kesehatan';
 
-    protected $fillable = ['id_pegawai','tinggi_badan','berat_badan','warna_rambut','warna_mata','beracamata','merokok'];
+    protected $fillable = ['id_pegawai','tinggi_badan','berat_badan','warna_rambut','warna_mata','berkacamata','merokok'];
 
     public function pegawai()
     {
