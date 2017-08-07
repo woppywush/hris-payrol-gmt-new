@@ -57,10 +57,19 @@ Route::get('report/{kode_client}/{token}', 'LaporanPegawaiController@reportforcl
 
 Route::get('masterclient', 'MasterClientController@index')->name('masterclient.index');
 Route::get('masterclient/create', 'MasterClientController@create')->name('masterclient.tambah');
+Route::post('masterclient/create', 'MasterClientController@store')->name('masterclient.store');
+
 Route::get('masterclient/cabang/{id}','MasterClientController@cabang_client_show')->name('masterclient.cabang');
 Route::get('masterclient/{id}/edit', 'MasterClientController@edit')->name('masterclient.edit');
-Route::get('cabangclient/{id}/edit', 'CabangClientController@edit')->name('cabangclient.edit');
-Route::resource('departemencabang','DepartemenCabangController');
+Route::post('clientcabang', 'MasterClientCabangController@store')->name('clientcabang.store');
+Route::get('clientcabang/{id}/edit', 'MasterClientCabangController@edit')->name('clientcabang.edit');
+Route::patch('clientcabang/{id}', 'MasterClientCabangController@update')->name('clientcabang.update');
+
+Route::get('departemencabang/{id}', 'MasterClientCabangDepartemenController@show')->name('departemen.show');
+Route::post('departemencabang', 'MasterClientCabangDepartemenController@store')->name('departemen.store');
+Route::get('departemencabang/{id}/edit', 'MasterClientCabangDepartemenController@edit')->name('departemen.edit');
+Route::post('departemen/{id}', 'MasterClientCabangDepartemenController@update')->name('departemen.update');
+// Route::resource('departemencabang','DepartemenCabangController');
 
 Route::resource('useraccount', 'AkunController');
 Route::get('useraccount/delete/{id}', 'AkunController@delete');

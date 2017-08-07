@@ -71,14 +71,14 @@
           <li class="{{ Route::currentRouteNamed('masterbank.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterbank.ubah') ? 'active' : '' }}"><a href="{{ route('masterbank.index') }}"><i class="fa fa-circle-o"></i> Data Bank</a></li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('masterclient.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterclient.tambah') ? 'active' : '' }}{{ Route::currentRouteNamed('masterclient.edit') ? 'active' : '' }}{{ Route::currentRouteNamed('masterclient.cabang') ? 'active' : '' }}{{ Route::currentRouteNamed('cabangclient.edit') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('masterclient.*') ? 'active' : '' }}{{ Route::is('clientcabang.*') ? 'active' : '' }}{{ Route::is('departemen.*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-building-o"></i>
           <span>Master Client</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('masterclient.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterclient.tambah') ? 'active' : '' }}{{ Route::currentRouteNamed('masterclient.edit') ? 'active' : '' }}{{ Route::currentRouteNamed('masterclient.cabang') ? 'active' : '' }}{{ Route::currentRouteNamed('cabangclient.edit') ? 'active' : '' }}"><a href="{{ url('masterclient') }}"><i class="fa fa-circle-o"></i> Data Client</a></li>
+          <li class="{{ Route::is('masterclient.*') ? 'active' : '' }}{{ Route::is('clientcabang.*') ? 'active' : '' }}{{ Route::is('departemen.*') ? 'active' : '' }}"><a href="{{ url('masterclient') }}"><i class="fa fa-circle-o"></i> Data Client</a></li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('kelola.pkwt') ? 'active' : '' }}{{ Route::currentRouteNamed('datapkwt.create') ? 'active' : '' }}{{ Route::currentRouteNamed('detail.pkwt') ? 'active' : '' }}{{ Route::currentRouteNamed('spv-manajemen') ? 'active' : '' }}{{ Route::currentRouteNamed('getClientSPV') ? 'active' : '' }}">
