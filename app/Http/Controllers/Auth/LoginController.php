@@ -52,7 +52,7 @@ class LoginController extends Controller
   	 * @param  Guard  $auth
   	 * @return Response
   	 */
-  	public function postLogin(Request $request, Guard $auth)
+  	public function login(Request $request, Guard $auth)
   	{
       $message = [
         'username.required' => 'Fill This Field',
@@ -87,10 +87,4 @@ class LoginController extends Controller
 
   	}
 
-    public function getLogout()
-    {
-      session()->flush();
-      Auth::logout();
-      return redirect()->route('index');
-    }
 }

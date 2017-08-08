@@ -11,12 +11,11 @@
 |
 */
 
+Auth::routes();
+
 Route::get('/', function () {return view('pages/login');})->name('index');
 
 Route::get('dashboard', 'DashboardController@gotodashboard')->name('dashboard');
-
-Route::post('login', 'Auth\LoginController@postLogin')->name('login');
-Route::get('logout', 'Auth\LoginController@getLogout')->name('logout');
 
 ////// MASTER PEGAWAI //////
 Route::resource('masterpegawai', 'MasterPegawaiController');
@@ -25,20 +24,21 @@ Route::get('datatables', ['as'=>'datatables.data', 'uses'=>'MasterPegawaiControl
 Route::get('masterpegawai/changestatus/{id}', 'MasterPegawaiController@changestatus');
 
 ////// PKWT //////
-Route::get('data-pkwt', 'PKWTController@index')->name('kelola.pkwt');
-Route::get('datatablespkwt', ['as'=>'datatables.pkwt', 'uses'=>'PKWTController@getPKWTforDataTables']);
-Route::get('datatablespkwtdash', ['as'=>'datatables.dash', 'uses'=>'PKWTController@getPKWTforDashboard']);
-Route::get('add-pkwt', ['as'=>'datapkwt.create', 'uses'=>'PKWTController@create']);
-Route::post('add-pkwt/proses', 'PKWTController@store');
-Route::get('view-detail-pkwt/{id}', ['as'=>'detail.pkwt', 'uses'=>'PKWTController@detail']);
-Route::get('edit-pkwt/getpkwt/{id}', 'PKWTController@bind');
-Route::post('saveChangesPKWT', 'PKWTController@saveChangesPKWT');
-Route::post('terminatepkwt', 'PKWTController@terminatePKWT');
+Route::get('pkwt', 'PkwtController@index')->name('pkwt.index');
+Route::get('pkwt/add', 'PkwtController@create')->name('pkwt.create');
+Route::post('pkwt/add', 'PkwtController@store')->name('pkwt.store');
+Route::get('pkwt-detail/{id}', 'PkwtController@detail')->name('pkwt.detail');
+Route::get('pkwt/edit/{id}', 'PkwtController@bind');
+Route::post('pkwt/edit/', 'PkwtController@saveChangesPKWT')->name('pkwt.edit');
+Route::post('terminatepkwt', 'PkwtController@terminatePKWT')->name('pkwt.terminate');
+Route::get('datatablespkwt', 'PkwtController@getPKWTforDataTables')->name('datatables.pkwt');
+Route::get('datatablespkwtdash', 'PkwtController@getPKWTforDashboard')->name('datatables.dash');
 
 ////// SPV Manajemen //////
-Route::get('spv-manajemen', ['as' => 'spv-manajemen', 'uses' => 'PKWTController@viewSPV']);
-Route::post('getClientSPV', ['as' => 'getClientSPV', 'uses' => 'PKWTController@proses']);
-Route::post('changeSPV', ['as' => 'changeSPV', 'uses' => 'PKWTController@changeSPV']);
+Route::get('spv-manajemen', 'PkwtController@viewSPV')->name('spv-manajemen');
+Route::post('getClientSPV', 'PkwtController@proses')->name('getClientSPV');
+Route::post('changeSPV', 'PKWTController@changeSPV')->name('changeSPV');
+
 
 //----- Master Jabatan -----//
 Route::get('masterjabatan', 'MasterJabatanController@create')->name('masterjabatan.create');
