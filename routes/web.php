@@ -35,9 +35,9 @@ Route::get('datatablespkwt', 'PkwtController@getPKWTforDataTables')->name('datat
 Route::get('datatablespkwtdash', 'PkwtController@getPKWTforDashboard')->name('datatables.dash');
 
 ////// SPV Manajemen //////
-Route::get('spv-manajemen', 'PkwtController@viewSPV')->name('spv-manajemen');
-Route::post('getClientSPV', 'PkwtController@proses')->name('getClientSPV');
-Route::post('changeSPV', 'PKWTController@changeSPV')->name('changeSPV');
+Route::get('supervisi', 'SpvController@index')->name('supervisi.index');
+Route::post('supervisi', 'SpvController@proses')->name('supervisi.getSupervisi');
+Route::post('supervisi/edit', 'SpvController@edit')->name('supervisi.edit');
 
 
 //----- Master Jabatan -----//

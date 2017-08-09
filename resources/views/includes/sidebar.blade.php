@@ -81,7 +81,7 @@
           <li class="{{ Route::is('masterclient.*') ? 'active' : '' }}{{ Route::is('clientcabang.*') ? 'active' : '' }}{{ Route::is('departemen.*') ? 'active' : '' }}"><a href="{{ url('masterclient') }}"><i class="fa fa-circle-o"></i> Data Client</a></li>
         </ul>
       </li>
-      <li class="treeview {{ Route::is('pkwt*') ? 'active' : '' }}{{ Route::currentRouteNamed('spv-manajemen') ? 'active' : '' }}{{ Route::currentRouteNamed('getClientSPV') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('pkwt*') ? 'active' : '' }}{{ Route::is('supervisi*') ? 'active' : '' }}{{ Route::is('getSupervisi') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-file-text"></i>
           <span>Manajemen PKWT</span>
@@ -91,8 +91,8 @@
           <li class="{{ Route::is('pkwt*') ? 'active' : '' }}">
             <a href="{{ route('pkwt.index') }}"><i class="fa fa-circle-o"></i>Data PKWT</a>
           </li>
-          <li class="{{ Route::is('spv-manajemen') ? 'active' : '' }}">
-            <a href="{{url('spv-manajemen')}}"><i class="fa fa-circle-o"></i>SPV Manajemen</a>
+          <li class="{{ Route::is('supervisi*') ? 'active' : '' }}">
+            <a href="{{ route('supervisi.index') }}"><i class="fa fa-circle-o"></i>Manajement Supervisi</a>
           </li>
         </ul>
       </li>

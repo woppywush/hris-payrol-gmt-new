@@ -15,6 +15,11 @@ class HrPkwt extends Model
       return $this->belongsTo('App\Models\MasterPegawai', 'id_pegawai');
     }
 
+    public function supervisi()
+    {
+      return $this->belongsTo('App\Models\MasterPegawai', 'id_kelompok_jabatan');
+    }
+
     public function clientCabang()
     {
       return $this->belongsTo('App\Models\MasterClientCabang', 'id_cabang_client');
