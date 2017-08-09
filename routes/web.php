@@ -49,12 +49,14 @@ Route::get('masterjabatan/hapusjabatan/{id}', 'MasterJabatanController@hapusJaba
 //----- Master Jabatan -----//
 
 
-////// Buat Laporan //////
+//----- Start Laporan -----//
 Route::get('laporan-pegawai', ['as' => 'laporanpegawai', 'uses' => 'LaporanPegawaiController@index']);
 Route::post('laporan-proses', ['as' => 'proseslaporan', 'uses' => 'LaporanPegawaiController@proses']);
 Route::get('laporan-proses/{id}/{type}', 'LaporanPegawaiController@downloadExcel');
 Route::get('report/{kode_client}/{token}', 'LaporanPegawaiController@reportforclient')->name('reportforclient');
+//----- End Laporan -----//
 
+//----- Start Master Client -----//
 Route::get('masterclient', 'MasterClientController@index')->name('masterclient.index');
 Route::get('masterclient/create', 'MasterClientController@create')->name('masterclient.tambah');
 Route::post('masterclient/create', 'MasterClientController@store')->name('masterclient.store');
@@ -69,13 +71,18 @@ Route::get('departemencabang/{id}', 'MasterClientCabangDepartemenController@show
 Route::post('departemencabang', 'MasterClientCabangDepartemenController@store')->name('departemen.store');
 Route::get('departemencabang/{id}/edit', 'MasterClientCabangDepartemenController@edit')->name('departemen.edit');
 Route::post('departemen/{id}', 'MasterClientCabangDepartemenController@update')->name('departemen.update');
-// Route::resource('departemencabang','DepartemenCabangController');
+//----- End Master Client -----//
 
-Route::resource('useraccount', 'AkunController');
-Route::get('useraccount/delete/{id}', 'AkunController@delete');
-Route::get('useraccount/kelola-profile/{id}', 'AkunController@kelolaprofile')->name('kelola.profile');
-Route::post('useraccount/update-profile', 'AkunController@updateprofile')->name('profile.edit');
-Route::post('useraccount/update-password', 'AkunController@updatepassword')->name('profile.editpassword');
+//----- Start Master User -----//
+Route::resource('useraccount', 'UserController');
+Route::get('useraccount', 'UserController@index')->name('useraccount.index');
+Route::post('useraccount', 'UserController@store')->name('useraccount.store');
+Route::get('useraccount/delete/{id}', 'UserController@delete');
+Route::get('useraccount/kelola-profile/{id}', 'UserController@kelolaprofile')->name('useraccount.profile');
+Route::post('useraccount/update-profile', 'UserController@updateprofile')->name('useraccount.edit');
+Route::post('useraccount/update-password', 'UserController@updatepassword')->name('useraccount.editpassword');
+//----- End Master User -----//
+
 
 Route::post('addkeluarga', 'MasterPegawaiController@addKeluarga');
 Route::get('masterpegawai/hapuskeluarga/{id}', 'MasterPegawaiController@hapusKeluarga');

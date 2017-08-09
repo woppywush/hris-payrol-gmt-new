@@ -11,7 +11,15 @@ use DB;
 
 class SpvController extends Controller
 {
-    //
+    /**
+    * Authentication controller.
+    *
+    * @return void
+    */
+    public function __construct()
+    {
+        $this->middleware('isAdmin');
+    }
 
     public function index()
     {

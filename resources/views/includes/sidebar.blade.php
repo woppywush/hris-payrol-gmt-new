@@ -96,14 +96,16 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('useraccount.create') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('useraccount*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-laptop"></i>
           <span>Manajemen Akun</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('useraccount.create') ? 'active' : '' }}"><a href="{{ route('useraccount.create') }}"><i class="fa fa-circle-o"></i> Tambah Akun Baru</a></li>
+          <li class="{{ Route::is('useraccount*') ? 'active' : '' }}">
+            <a href="{{ route('useraccount.index') }}"><i class="fa fa-circle-o"></i> Akun User</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('laporanpegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('proseslaporan') ? 'active' : '' }}">
