@@ -108,14 +108,15 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('laporanpegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('proseslaporan') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('laporanpegawai*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-file-text-o"></i>
           <span>Laporan</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('laporanpegawai') ? 'active' : '' }}{{ Route::currentRouteNamed('proseslaporan') ? 'active' : '' }}"><a href="{{ route('laporanpegawai') }}"><i class="fa fa-circle-o"></i> Laporan Data Pegawai</a></li>
+          <li class="{{ Route::is('laporanpegawai*') ? 'active' : '' }}">
+            <a href="{{ route('laporanpegawai.index') }}"><i class="fa fa-circle-o"></i> Laporan Pegawai</a></li>
         </ul>
       </li>
     @endif

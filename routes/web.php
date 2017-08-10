@@ -50,9 +50,9 @@ Route::get('masterjabatan/hapusjabatan/{id}', 'MasterJabatanController@hapusJaba
 
 
 //----- Start Laporan -----//
-Route::get('laporan-pegawai', ['as' => 'laporanpegawai', 'uses' => 'LaporanPegawaiController@index']);
-Route::post('laporan-proses', ['as' => 'proseslaporan', 'uses' => 'LaporanPegawaiController@proses']);
-Route::get('laporan-proses/{id}/{type}', 'LaporanPegawaiController@downloadExcel');
+Route::get('laporan-pegawai', 'LaporanPegawaiController@index')->name('laporanpegawai.index');
+Route::post('laporan-pegawai', 'LaporanPegawaiController@proses')->name('laporanpegawai.proses');
+Route::get('laporan-pegawai/cetak/{id}', 'LaporanPegawaiController@downloadExcel')->name('laporanpegawai.cetak');
 Route::get('report/{kode_client}/{token}', 'LaporanPegawaiController@reportforclient')->name('reportforclient');
 //----- End Laporan -----//
 
