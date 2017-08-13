@@ -55,7 +55,10 @@
               <a href="{{ route('masterpegawai.index') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-google"><i class="fa fa-users"></i> Master Pegawai</a>
               <a href="{{ route('masterjabatan.create') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-instagram"><i class="fa fa-briefcase"></i> Master Jabatan</a>
               <a href="{{url('data-pkwt')}}" class="btn btn-block btn-social btn-maroon btn-flat btn-twitter"><i class="fa fa-file-text"></i> Manajemen PKWT</a>
-              <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-github"><i class="fa fa-sign-out"></i> Logout</a>
+              <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-vk" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Logout</a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+              </form>
             </div>
           </div>
           @elseif(session('level') == 2)
@@ -66,7 +69,10 @@
               <a href="{{ route('periodegaji.index') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-dropbox"><i class="fa fa-building-o"></i> Periode Gaji</a>
               <a href="{{ route('komgaji.index') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-google"><i class="fa fa fa-cogs"></i> Komponen Gaji</a>
               <a href="{{ route('komgaji.index') }}" class="btn btn-block btn-social btn-grey btn-flat btn-github"><i class="fa fa fa fa-money"></i> Proses Payroll</a>
-              <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-vk"><i class="fa fa-sign-out"></i> Logout</a>
+              <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-vk" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Logout</a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+              </form>
             </div>
           </div>
           @elseif(session('level') == 3)
@@ -78,7 +84,10 @@
               <a href="{{ route('masterpegawai.index') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-google"><i class="fa fa-users"></i> Master Pegawai</a>
               <a href="{{ route('masterjabatan.create') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-instagram"><i class="fa fa-briefcase"></i> Master Jabatan</a>
               <a href="{{ route('batchpayroll.index') }}" class="btn btn-block btn-social btn-grey btn-flat btn-github"><i class="fa fa fa fa-money"></i> Proses Payroll</a>
-              <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-vk"><i class="fa fa-sign-out"></i> Logout</a>
+              <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-vk" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Logout</a>
+              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                  {{ csrf_field() }}
+              </form>
             </div>
           </div>
           @endif

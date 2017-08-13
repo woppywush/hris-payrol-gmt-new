@@ -17,72 +17,11 @@ Route::get('/', function () {return view('pages/login');})->name('index');
 
 Route::get('dashboard', 'DashboardController@gotodashboard')->name('dashboard');
 
-////// MASTER PEGAWAI //////
+//----- Master Pegawai -----//
 Route::resource('masterpegawai', 'MasterPegawaiController');
 Route::post('masterpegawai', 'MasterPegawaiController@store')->name('masterpegawai.store');
 Route::get('datatables', ['as'=>'datatables.data', 'uses'=>'MasterPegawaiController@getDataForDataTable']);
 Route::get('masterpegawai/changestatus/{id}', 'MasterPegawaiController@changestatus');
-
-////// PKWT //////
-Route::get('pkwt', 'PkwtController@index')->name('pkwt.index');
-Route::get('pkwt/add', 'PkwtController@create')->name('pkwt.create');
-Route::post('pkwt/add', 'PkwtController@store')->name('pkwt.store');
-Route::get('pkwt-detail/{id}', 'PkwtController@detail')->name('pkwt.detail');
-Route::get('pkwt/edit/{id}', 'PkwtController@bind');
-Route::post('pkwt/edit/', 'PkwtController@saveChangesPKWT')->name('pkwt.edit');
-Route::post('terminatepkwt', 'PkwtController@terminatePKWT')->name('pkwt.terminate');
-Route::get('datatablespkwt', 'PkwtController@getPKWTforDataTables')->name('datatables.pkwt');
-Route::get('datatablespkwtdash', 'PkwtController@getPKWTforDashboard')->name('datatables.dash');
-
-////// SPV Manajemen //////
-Route::get('supervisi', 'SpvController@index')->name('supervisi.index');
-Route::post('supervisi', 'SpvController@proses')->name('supervisi.getSupervisi');
-Route::post('supervisi/edit', 'SpvController@edit')->name('supervisi.edit');
-
-
-//----- Master Jabatan -----//
-Route::get('masterjabatan', 'MasterJabatanController@create')->name('masterjabatan.create');
-Route::post('masterjabatan', 'MasterJabatanController@store')->name('masterjabatan.store');
-Route::get('masterjabatan/{id}', 'MasterJabatanController@edit')->name('masterjabatan.edit');
-Route::patch('masterjabatan/{id}', 'MasterJabatanController@update')->name('masterjabatan.update');
-Route::get('masterjabatan/hapusjabatan/{id}', 'MasterJabatanController@hapusJabatan')->name('masterjabatan.hapusjabatan');
-//----- Master Jabatan -----//
-
-
-//----- Start Laporan -----//
-Route::get('laporan-pegawai', 'LaporanPegawaiController@index')->name('laporanpegawai.index');
-Route::post('laporan-pegawai', 'LaporanPegawaiController@proses')->name('laporanpegawai.proses');
-Route::get('laporan-pegawai/cetak/{id}', 'LaporanPegawaiController@downloadExcel')->name('laporanpegawai.cetak');
-Route::get('report/{kode_client}/{token}', 'LaporanPegawaiController@reportforclient')->name('reportforclient');
-//----- End Laporan -----//
-
-//----- Start Master Client -----//
-Route::get('masterclient', 'MasterClientController@index')->name('masterclient.index');
-Route::get('masterclient/create', 'MasterClientController@create')->name('masterclient.tambah');
-Route::post('masterclient/create', 'MasterClientController@store')->name('masterclient.store');
-
-Route::get('masterclient/cabang/{id}','MasterClientController@cabang_client_show')->name('masterclient.cabang');
-Route::get('masterclient/{id}/edit', 'MasterClientController@edit')->name('masterclient.edit');
-Route::post('clientcabang', 'MasterClientCabangController@store')->name('clientcabang.store');
-Route::get('clientcabang/{id}/edit', 'MasterClientCabangController@edit')->name('clientcabang.edit');
-Route::patch('clientcabang/{id}', 'MasterClientCabangController@update')->name('clientcabang.update');
-
-Route::get('departemencabang/{id}', 'MasterClientCabangDepartemenController@show')->name('departemen.show');
-Route::post('departemencabang', 'MasterClientCabangDepartemenController@store')->name('departemen.store');
-Route::get('departemencabang/{id}/edit', 'MasterClientCabangDepartemenController@edit')->name('departemen.edit');
-Route::post('departemen/{id}', 'MasterClientCabangDepartemenController@update')->name('departemen.update');
-//----- End Master Client -----//
-
-//----- Start Master User -----//
-Route::resource('useraccount', 'UserController');
-Route::get('useraccount', 'UserController@index')->name('useraccount.index');
-Route::post('useraccount', 'UserController@store')->name('useraccount.store');
-Route::get('useraccount/delete/{id}', 'UserController@delete');
-Route::get('useraccount/kelola-profile/{id}', 'UserController@kelolaprofile')->name('useraccount.profile');
-Route::post('useraccount/update-profile', 'UserController@updateprofile')->name('useraccount.edit');
-Route::post('useraccount/update-password', 'UserController@updatepassword')->name('useraccount.editpassword');
-//----- End Master User -----//
-
 
 Route::post('addkeluarga', 'MasterPegawaiController@addKeluarga');
 Route::get('masterpegawai/hapuskeluarga/{id}', 'MasterPegawaiController@hapusKeluarga');
@@ -133,24 +72,93 @@ Route::get('upload/view-document', 'UploadDocumentController@getDocforDataTables
 Route::get('upload/bind-data/{id}', 'UploadDocumentController@bindData');
 Route::post('upload/edit', 'UploadDocumentController@editDokumen')->name('upload.edit');
 
+Route::post('historipegawai/create', 'MasterPegawaiController@addhistoripegawai')->name('historipegawai.create');
+Route::get('historipegawai/bind-data/{id}', 'MasterPegawaiController@bindhistoriperingatan');
+Route::post('historipegawai/update', 'MasterPegawaiController@updatehistoripegawai')->name('historipegawai.update');
+Route::get('historipegawai/delete/{id}', 'MasterPegawaiController@hapusRiwayatPekerjaan');
+//----- End Master Pegawai -----//
+
+
+//----- Start PKWT -----//
+Route::get('pkwt', 'PkwtController@index')->name('pkwt.index');
+Route::get('pkwt/add', 'PkwtController@create')->name('pkwt.create');
+Route::post('pkwt/add', 'PkwtController@store')->name('pkwt.store');
+Route::get('pkwt-detail/{id}', 'PkwtController@detail')->name('pkwt.detail');
+Route::get('pkwt/edit/{id}', 'PkwtController@bind');
+Route::post('pkwt/edit/', 'PkwtController@saveChangesPKWT')->name('pkwt.edit');
+Route::post('terminatepkwt', 'PkwtController@terminatePKWT')->name('pkwt.terminate');
+Route::get('datatablespkwt', 'PkwtController@getPKWTforDataTables')->name('datatables.pkwt');
+Route::get('datatablespkwtdash', 'PkwtController@getPKWTforDashboard')->name('datatables.dash');
+
 Route::post('data-peringatan/create', 'DataPeringatanController@create')->name('dataperingatan.create');
 Route::get('masterpegawai/hapusperingatan/{id}', 'DataPeringatanController@hapusPeringatan');
 Route::post('masterpegawai/editperingatan', 'DataPeringatanController@editPeringatan')->name('dataperingatan.update');
 Route::get('masterpegawai/bind-peringatan/{id}', 'DataPeringatanController@bindPeringatan');
+//----- End PKWT -----//
 
-//----- MASTER BANK -----//
+
+//----- Start Supervisi Manajemen -----//
+Route::get('supervisi', 'SpvController@index')->name('supervisi.index');
+Route::post('supervisi', 'SpvController@proses')->name('supervisi.getSupervisi');
+Route::post('supervisi/edit', 'SpvController@edit')->name('supervisi.edit');
+//----- End Supervisi Manajemen -----//
+
+
+//----- Master Jabatan -----//
+Route::get('masterjabatan', 'MasterJabatanController@create')->name('masterjabatan.create');
+Route::post('masterjabatan', 'MasterJabatanController@store')->name('masterjabatan.store');
+Route::get('masterjabatan/{id}', 'MasterJabatanController@edit')->name('masterjabatan.edit');
+Route::patch('masterjabatan/{id}', 'MasterJabatanController@update')->name('masterjabatan.update');
+Route::get('masterjabatan/hapusjabatan/{id}', 'MasterJabatanController@hapusJabatan')->name('masterjabatan.hapusjabatan');
+//----- Master Jabatan -----//
+
+
+//----- Start Laporan -----//
+Route::get('laporan-pegawai', 'LaporanPegawaiController@index')->name('laporanpegawai.index');
+Route::post('laporan-pegawai', 'LaporanPegawaiController@proses')->name('laporanpegawai.proses');
+Route::get('laporan-pegawai/cetak/{id}', 'LaporanPegawaiController@downloadExcel')->name('laporanpegawai.cetak');
+Route::get('report/{kode_client}/{token}', 'LaporanPegawaiController@reportforclient')->name('reportforclient');
+//----- End Laporan -----//
+
+
+//----- Start Master Client -----//
+Route::get('masterclient', 'MasterClientController@index')->name('masterclient.index');
+Route::get('masterclient/create', 'MasterClientController@create')->name('masterclient.tambah');
+Route::post('masterclient/create', 'MasterClientController@store')->name('masterclient.store');
+
+Route::get('masterclient/cabang/{id}','MasterClientController@cabang_client_show')->name('masterclient.cabang');
+Route::get('masterclient/{id}/edit', 'MasterClientController@edit')->name('masterclient.edit');
+Route::post('clientcabang', 'MasterClientCabangController@store')->name('clientcabang.store');
+Route::get('clientcabang/{id}/edit', 'MasterClientCabangController@edit')->name('clientcabang.edit');
+Route::patch('clientcabang/{id}', 'MasterClientCabangController@update')->name('clientcabang.update');
+
+Route::get('departemencabang/{id}', 'MasterClientCabangDepartemenController@show')->name('departemen.show');
+Route::post('departemencabang', 'MasterClientCabangDepartemenController@store')->name('departemen.store');
+Route::get('departemencabang/{id}/edit', 'MasterClientCabangDepartemenController@edit')->name('departemen.edit');
+Route::post('departemen/{id}', 'MasterClientCabangDepartemenController@update')->name('departemen.update');
+//----- End Master Client -----//
+
+
+//----- Start Master User -----//
+Route::resource('useraccount', 'UserController');
+Route::get('useraccount', 'UserController@index')->name('useraccount.index');
+Route::post('useraccount', 'UserController@store')->name('useraccount.store');
+Route::get('useraccount/delete/{id}', 'UserController@delete');
+Route::get('useraccount/kelola-profile/{id}', 'UserController@kelolaprofile')->name('useraccount.profile');
+Route::post('useraccount/update-profile', 'UserController@updateprofile')->name('useraccount.edit');
+Route::post('useraccount/update-password', 'UserController@updatepassword')->name('useraccount.editpassword');
+//----- End Master User -----//
+
+
+//----- Start Master Bank -----//
 Route::get('masterbank', 'MasterBankController@index')->name('masterbank.index');
 Route::post('masterbank', 'MasterBankController@store')->name('masterbank.store');
 Route::get('masterbank/{id}/edit', 'MasterBankController@ubah')->name('masterbank.ubah');
 Route::post('masterbank/edit', 'MasterBankController@edit')->name('masterbank.edit');
 Route::get('masterbank/hapusbank/{id}', ['as'=>'masterbank.hapusbank', 'uses'=>'MasterBankController@hapusBank']);
-//----- MASTER BANK -----//
+//----- Start Master Bank -----//
 
 
-Route::post('historipegawai/create', ['as' => 'historipegawai.create', 'uses' => 'MasterPegawaiController@addhistoripegawai']);
-Route::get('historipegawai/bind-data/{id}', 'MasterPegawaiController@bindhistoriperingatan');
-Route::post('historipegawai/update', ['as' => 'historipegawai.update', 'uses' => 'MasterPegawaiController@updatehistoripegawai']);
-Route::get('historipegawai/delete/{id}', 'MasterPegawaiController@hapusRiwayatPekerjaan');
 
 Route::get('import', ['as' => 'import', 'uses' => 'ImportDataController@index']);
 Route::post('import-proses', 'ImportDataController@proses');
