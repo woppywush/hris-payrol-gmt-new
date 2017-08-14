@@ -201,8 +201,8 @@ Route::get('periode-gaji/get-detail/periode/{id}', 'PeriodeGajiController@getdat
 ///// PEGAWAI TO PERIODE /////
 Route::get('periode-pegawai', 'PegawaiToPeriodeController@index')->name('periodepegawai.index');
 Route::post('periode-pegawai', 'PegawaiToPeriodeController@store')->name('periodepegawai.store');
-Route::get('periode-pegawai/delete/{id}', 'PegawaiToPeriodeController@delete')->name('periodepegawai.delete');
 Route::post('periode-pegawai-proses', 'PegawaiToPeriodeController@proses')->name('periodepegawai.proses');
+Route::get('periode-pegawai/delete/{id}', 'PegawaiToPeriodeController@delete')->name('periodepegawai.delete');
 
 ///// SET GAJI PEGAWAI //////
 Route::get('set-gaji-pegawai/set-gaji', 'SetGajiController@index')->name('setgaji.index');

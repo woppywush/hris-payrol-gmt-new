@@ -122,7 +122,7 @@
     @endif
 
     @if (session('level')=="2")
-      <li class="treeview {{ Route::is('periodegaji*') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.proses') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('periodegaji*') ? 'active' : '' }}{{ Route::is('periodepegawai*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-calendar-minus-o"></i>
           <span>Periode</span>
@@ -132,7 +132,7 @@
           <li class="{{ Route::is('periodegaji*') ? 'active' : '' }}">
             <a href="{{route('periodegaji.index')}}"><i class="fa fa-circle-o"></i> Periode Gaji</a>
           </li>
-          <li class="{{ Route::currentRouteNamed('periodepegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.proses') ? 'active' : '' }}">
+          <li class="{{ Route::is('periodepegawai*') ? 'active' : '' }}">
             <a href="{{ route('periodepegawai.index') }}"><i class="fa fa-circle-o"></i> Periode Pegawai</a>
           </li>
         </ul>
