@@ -122,15 +122,19 @@
     @endif
 
     @if (session('level')=="2")
-      <li class="treeview {{ Route::currentRouteNamed('periodegaji.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodegaji.detail') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.proses') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('periodegaji*') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.proses') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-calendar-minus-o"></i>
           <span>Periode</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('periodegaji.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodegaji.detail') ? 'active' : '' }}"><a href="{{route('periodegaji.index')}}"><i class="fa fa-circle-o"></i> Periode Gaji</a></li>
-          <li class="{{ Route::currentRouteNamed('periodepegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.proses') ? 'active' : '' }}"><a href="{{ route('periodepegawai.index') }}"><i class="fa fa-circle-o"></i> Periode Pegawai</a></li>
+          <li class="{{ Route::is('periodegaji*') ? 'active' : '' }}">
+            <a href="{{route('periodegaji.index')}}"><i class="fa fa-circle-o"></i> Periode Gaji</a>
+          </li>
+          <li class="{{ Route::currentRouteNamed('periodepegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('periodepegawai.proses') ? 'active' : '' }}">
+            <a href="{{ route('periodepegawai.index') }}"><i class="fa fa-circle-o"></i> Periode Pegawai</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('komgajitetap.index') ? 'active' : '' }}{{ Route::currentRouteNamed('komgajitetapclient.index') ? 'active' : '' }}{{ Route::currentRouteNamed('komgaji.index') ? 'active' : '' }}">
@@ -194,14 +198,16 @@
           <li class="{{ Route::currentRouteNamed('historygajipokok.index') ? 'active' : '' }}"><a href="{{route('historygajipokok.index')}}"><i class="fa fa-circle-o"></i> Set Gaji Pokok</a></li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('batchpayroll.index') ? 'active' : '' }}{{ Route::currentRouteNamed('batchpayroll.detail') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('batchpayroll*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-money"></i>
           <span>Proses Payroll</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('batchpayroll.index') ? 'active' : '' }}{{ Route::currentRouteNamed('batchpayroll.detail') ? 'active' : '' }}"><a href="{{ route('batchpayroll.index') }}"><i class="fa fa-circle-o"></i> Generate Batch</a></li>
+          <li class="{{ Route::is('batchpayroll*') ? 'active' : '' }}">
+            <a href="{{ route('batchpayroll.index') }}"><i class="fa fa-circle-o"></i> Generate Batch</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('rapelgaji.index') ? 'active' : '' }}

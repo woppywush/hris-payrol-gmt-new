@@ -205,11 +205,11 @@ Route::get('periode-pegawai/delete/{id}', 'PegawaiToPeriodeController@delete')->
 Route::post('periode-pegawai-proses', 'PegawaiToPeriodeController@proses')->name('periodepegawai.proses');
 
 ///// SET GAJI PEGAWAI //////
-Route::get('pegawai/set-gaji', 'SetGajiController@index')->name('setgaji.index');
-Route::get('pegawai/detail-pegawai/{id}', 'SetGajiController@detailpegawai')->name('setgaji.detailpegawai');
-Route::get('pegawai/getdata', 'SetGajiController@getdata')->name('setgaji.getdata');
-Route::get('pegawai/bind-gaji/{id}', 'SetGajiController@bind')->name('setgaji.bind');
-Route::post('pegawai/update-gaji', 'SetGajiController@update')->name('setgaji.update');
+Route::get('set-gaji-pegawai/set-gaji', 'SetGajiController@index')->name('setgaji.index');
+Route::get('set-gaji-pegawai/detail-pegawai/{id}', 'SetGajiController@detailpegawai')->name('setgaji.detailpegawai');
+Route::get('set-gaji-pegawai/getdata', 'SetGajiController@getdata')->name('setgaji.getdata');
+Route::get('set-gaji-pegawai/bind-gaji/{id}', 'SetGajiController@bind')->name('setgaji.bind');
+Route::post('set-gaji-pegawai/update-gaji', 'SetGajiController@update')->name('setgaji.update');
 
 ///// BATCH PAYROLL ///////
 Route::get('batch-payroll', 'BatchPayrollController@index')->name('batchpayroll.index');
