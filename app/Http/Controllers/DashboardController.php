@@ -11,8 +11,8 @@ use App\Models\MasterUser;
 use App\Models\HrPkwt;
 use App\Models\MasterPegawai;
 use App\Models\MasterClient;
-use App\Models\BatchPayroll;
-use App\Models\BatchProcessed;
+use App\Models\PrBatchPayroll;
+use App\Models\PrBatchProcessed;
 
 class DashboardController extends Controller
 {
@@ -67,17 +67,17 @@ class DashboardController extends Controller
           }
         }
 
-        $batchprocessed = BatchPayroll::
-          select('batch_payroll.id', 'periode_gaji.tanggal', 'batch_processed.tanggal_cutoff_awal', 'batch_processed.tanggal_cutoff_akhir', 'batch_processed.total_pegawai', 'batch_processed.total_pengeluaran', 'batch_payroll.flag_processed')
-          ->leftjoin('batch_processed', 'batch_payroll.id', '=', 'batch_processed.id_batch_payroll')
-          ->join('periode_gaji', 'batch_processed.id_periode', '=', 'periode_gaji.id')
-          ->orderby('batch_processed.id', 'desc')
+        $batchprocessed = PrBatchPayroll::
+          select('pr_batch_payroll.id', 'pr_periode_gaji.tanggal', 'pr_batch_processed.tanggal_cutoff_awal', 'pr_batch_processed.tanggal_cutoff_akhir', 'pr_batch_processed.total_pegawai', 'pr_batch_processed.total_pengeluaran', 'pr_batch_payroll.flag_processed')
+          ->leftjoin('pr_batch_processed', 'pr_batch_payroll.id', '=', 'pr_batch_processed.id_batch_payroll')
+          ->join('pr_periode_gaji', 'pr_batch_processed.id_periode', '=', 'pr_periode_gaji.id')
+          ->orderby('pr_batch_processed.id', 'desc')
           ->get();
 
         $getclient = MasterClient::
           select('master_client.id', 'master_client.nama_client', DB::RAW('count(*) as jumlah_cabang'))
-          ->join('cabang_client', 'master_client.id', '=', 'cabang_client.id_client')
-          ->groupby('cabang_client.id_client')
+          ->join('master_client_cabang', 'master_client.id', '=', 'master_client_cabang.id_client')
+          ->groupby('master_client_cabang.id_client')
           ->get();
 
         return view('pages.dashboard.index')
@@ -105,11 +105,11 @@ class DashboardController extends Controller
           }
         }
 
-        $batchprocessed = BatchPayroll::
-          select('batch_payroll.id', 'periode_gaji.tanggal', 'batch_processed.tanggal_cutoff_awal', 'batch_processed.tanggal_cutoff_akhir', 'batch_processed.total_pegawai', 'batch_processed.total_pengeluaran', 'batch_payroll.flag_processed')
-          ->leftjoin('batch_processed', 'batch_payroll.id', '=', 'batch_processed.id_batch_payroll')
-          ->join('periode_gaji', 'batch_processed.id_periode', '=', 'periode_gaji.id')
-          ->orderby('batch_processed.id', 'desc')
+        $batchprocessed = PrBatchPayroll::
+          select('pr_batch_payroll.id', 'pr_periode_gaji.tanggal', 'pr_batch_processed.tanggal_cutoff_awal', 'pr_batch_processed.tanggal_cutoff_akhir', 'pr_batch_processed.total_pegawai', 'pr_batch_processed.total_pengeluaran', 'pr_batch_payroll.flag_processed')
+          ->leftjoin('pr_batch_processed', 'pr_batch_payroll.id', '=', 'pr_batch_processed.id_batch_payroll')
+          ->join('pr_periode_gaji', 'pr_batch_processed.id_periode', '=', 'pr_periode_gaji.id')
+          ->orderby('pr_batch_processed.id', 'desc')
           ->get();
 
         $getclient = MasterClient::
