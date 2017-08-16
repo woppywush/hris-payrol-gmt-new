@@ -172,14 +172,16 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('pengecualian.client.index') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('pengecualian.client*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-unlink"></i>
           <span>Pengecualian Hari Libur</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('pengecualian.client.index') ? 'active' : '' }}"><a href="{{route('pengecualian.client.index')}}"><i class="fa fa-circle-o"></i> Set Pengecualian</a></li>
+          <li class="{{ Route::is('pengecualian.client*') ? 'active' : '' }}">
+            <a href="{{ route('pengecualian.client.index') }}"><i class="fa fa-circle-o"></i> Set Pengecualian</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('harikerja.index') ? 'active' : '' }}">
