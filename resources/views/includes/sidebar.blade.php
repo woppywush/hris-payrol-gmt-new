@@ -196,14 +196,16 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('historygajipokok.index') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('historygajipokok*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-building-o"></i>
           <span>Gaji Pokok</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('historygajipokok.index') ? 'active' : '' }}"><a href="{{route('historygajipokok.index')}}"><i class="fa fa-circle-o"></i> Set Gaji Pokok</a></li>
+          <li class="{{ Route::is('historygajipokok*') ? 'active' : '' }}">
+            <a href="{{ route('historygajipokok.index') }}"><i class="fa fa-circle-o"></i> Set Gaji Pokok</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::is('batchpayroll*') ? 'active' : '' }}">
