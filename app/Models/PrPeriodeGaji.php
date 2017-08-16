@@ -10,5 +10,15 @@ class PrPeriodeGaji extends Model
 
     protected $fillable = ['tanggal','keterangan'];
 
-    
+    public function detail_periode_gaji()
+    {
+      return $this->hasMany('App\Models\PrPeriodeGajiDetail');
+    }
+
+    public function batch_thr()
+    {
+      return $this->hasMany('App\Models\PrBatchThr');
+    }
+
+
 }
