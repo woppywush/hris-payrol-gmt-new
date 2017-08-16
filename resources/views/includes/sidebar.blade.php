@@ -148,24 +148,28 @@
           <li class="{{ Route::currentRouteNamed('komgaji.index') ? 'active' : '' }}"><a href="{{route('komgaji.index')}}"><i class="fa fa-circle-o"></i> Gaji Variable</a></li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('hari.libur.index') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('hari.libur*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-child"></i>
           <span>Manajemen Hari Libur</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('hari.libur.index') ? 'active' : '' }}"><a href="{{route('hari.libur.index')}}"><i class="fa fa-circle-o"></i> Set Hari Libur</a></li>
+          <li class="{{ Route::is('hari.libur*') ? 'active' : '' }}">
+            <a href="{{route('hari.libur.index')}}"><i class="fa fa-circle-o"></i> Set Hari Libur</a>
+          </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('bpjs.index') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('bpjs*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-ambulance"></i>
           <span>Manajemen BPJS</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('bpjs.index') ? 'active' : '' }}"><a href="{{route('bpjs.index')}}"><i class="fa fa-circle-o"></i> Set BPJS</a></li>
+          <li class="{{ Route::is('bpjs*') ? 'active' : '' }}">
+            <a href="{{route('bpjs.index')}}"><i class="fa fa-circle-o"></i> Set BPJS</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('pengecualian.client.index') ? 'active' : '' }}">
