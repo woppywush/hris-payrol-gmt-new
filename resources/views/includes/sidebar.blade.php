@@ -184,14 +184,16 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('harikerja.index') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('harikerja*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-user-secret"></i>
           <span>Hari Kerja</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('harikerja.index') ? 'active' : '' }}"><a href="{{route('harikerja.index')}}"><i class="fa fa-circle-o"></i> Set Hari Kerja</a></li>
+          <li class="{{ Route::is('harikerja*') ? 'active' : '' }}">
+            <a href="{{ route('harikerja.index') }}"><i class="fa fa-circle-o"></i> Set Hari Kerja</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::currentRouteNamed('historygajipokok.index') ? 'active' : '' }}">
