@@ -28,7 +28,7 @@ class KomponenGajiTetapController extends Controller
     {
       $getkomponen = MasterKomponenGaji::where('tipe_komponen_gaji', '=', 0)->paginate(10);
 
-      return view('pages.masterkomponengaji.index' ,compact('getkomponen'));
+      return view('pages.masterkomponengaji.gajitetap' ,compact('getkomponen'));
     }
 
     public function store(Request $request)
@@ -91,7 +91,7 @@ class KomponenGajiTetapController extends Controller
     public function delete($id)
     {
         $check = PrKomponenGajiDetail::where('id_komponen_gaji', $id)->first();
-        
+
         if($check=="") {
 
           $set = MasterKomponenGaji::find($id);
