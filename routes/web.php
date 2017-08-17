@@ -237,10 +237,14 @@ Route::post('batch-payroll-detail/import', 'BatchPayrollDetailController@import'
 
 
 ///// Export Batch Payrol /////
-Route::get('batch-payroll/laporan-prosesSPV/{id}', 'LaporanBatchPayrollController@prosesSPV')->name('laporan.prosesSPV');
-Route::get('batch-payroll/laporan-prosesAll/{id}', 'LaporanBatchPayrollController@prosesAll')->name('laporan.prosesAll');
-Route::get('batch-payroll/laporan-prosesClient/{id}', 'LaporanBatchPayrollController@prosesClient')->name('laporan.prosesClient');
-Route::get('batch-payroll/laporan-prosesBank/{id}', 'LaporanBatchPayrollController@prosesBank')->name('laporan.prosesBank');
+Route::get('batch-payroll/laporan-proses-spv/{id}', 'BatchPayrollLaporanController@prosesSPV')->name('laporan.prosesSPV');
+Route::get('batch-payroll/laporan-proses-all/{id}', 'BatchPayrollLaporanController@prosesAll')->name('laporan.prosesAll');
+Route::get('batch-payroll/laporan-proses-client/{id}', 'BatchPayrollLaporanController@prosesClient')->name('laporan.prosesClient');
+Route::get('batch-payroll/laporan-proses-bank/{id}', 'BatchPayrollLaporanController@prosesBank')->name('laporan.prosesBank');
+Route::get('batch-payroll/laporan-proses-slipgaji/{id}', 'BatchPayrollLaporanController@prosesSlipGaji')->name('laporan.prosesSlipGaji');
+Route::get('testslip', function(){
+	return view('pages.LaporanPayroll.slipGaji');
+});
 
 
 ///// HARI LIBUR //////

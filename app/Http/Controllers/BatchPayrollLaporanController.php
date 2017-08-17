@@ -1,0 +1,153 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+
+use App\Models\MasterPegawai;
+use App\Models\MasterClient;
+use App\Models\MasterClientCabang;
+use App\Models\MasterBank;
+use App\Models\MasterKomponenGaji;
+use App\Models\MasterHariLibur;
+
+use App\Models\HrPkwt;
+
+use App\Models\PrBpjs;
+use App\Models\PrPeriodeGaji;
+use App\Models\PrBatchPayroll;
+use App\Models\PrBatchProcessed;
+use App\Models\PrKomponenGajiTetap;
+use App\Models\PrPeriodeGajiDetail;
+use App\Models\PrKomponenGajiDetail;
+use App\Models\PrBatchPayrollDetail;
+
+use DB;
+use Excel;
+
+class BatchPayrollLaporanController extends Controller
+{
+    /**
+    * Authentication controller.
+    *
+    * @return void
+    */
+    public function __construct()
+    {
+        $this->middleware('isAdmin');
+    }
+
+    public function prosesSPV($id)
+    {
+        // Get Data Supervisi Pegawwai
+        $getSPV = HrPkwt::join('pr_batch_payroll_detail', 'pr_batch_payroll_detail.id_pegawai', '=', 'hr_pkwt.id_pegawai')
+                        ->join('master_pegawai', 'master_pegawai.id', '=', 'hr_pkwt.id_kelompok_jabatan')
+                        ->select('master_pegawai.nama','pr_batch_payroll_detail.id_pegawai', 'hr_pkwt.id_kelompok_jabatan')
+                        ->where('pr_batch_payroll_detail.id_batch_payroll', $id)
+                        ->orderby('hr_pkwt.id_kelompok_jabatan')
+                        ->groupby('master_pegawai.id')
+                        ->get();
+
+        $getAnak = HrPkwt::join('pr_batch_payroll_detail', 'pr_batch_payroll_detail.id_pegawai', '=', 'hr_pkwt.id_pegawai')
+                        ->join('master_pegawai', 'master_pegawai.id', '=', 'hr_pkwt.id_kelompok_jabatan')
+                        ->select('pr_batch_payroll_detail.id_pegawai', 'hr_pkwt.id_kelompok_jabatan')
+                        ->where('pr_batch_payroll_detail.id_batch_payroll', $id)
+                        ->orderby('hr_pkwt.id_kelompok_jabatan')
+                        ->get();
+
+        $getkomponengajinya = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+        // Get Batch Payrol
+        $getbatch = PrBatchPayroll::join('pr_periode_gaji', 'pr_batch_payroll.id_periode_gaji', '=', 'pr_periode_gaji.id')
+                                  ->where('pr_batch_payroll.id', $id)->first();
+
+        // Start Query Detail Gaji Karyawan
+        $query1 = "SELECT pegawai.id, pegawai.nip, pegawai.nama as nama_pegawai, IFNULL(tabel_Workday.workday, 0) as Jumlah_Workday, IFNULL(tabel_Jabatan.nama_jabatan, 0) as Jabatan";
+        $query2 = "FROM (select a.id, a.nip, a.nama from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
+        $query3 = "LEFT OUTER JOIN (SELECT d.id, d.nama, c.workday as workday FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id GROUP BY d.id) as tabel_Workday ON pegawai.id = tabel_Workday.id ";
+        $query4 = "LEFT OUTER JOIN(SELECT b.nama_jabatan, a.id FROM master_pegawai a, master_jabatan b WHERE a.id_jabatan = b.id) as tabel_Jabatan ON pegawai.id = tabel_Jabatan.id";
+        foreach ($getkomponengajinya as $komponen) {
+          $replace = str_replace(' ', '_', $komponen->nama_komponen);
+          $query1 .=  ",IFNULL(tabel_$replace.nilai, 0) as Jumlah_$replace ";
+          $query2 .= "LEFT OUTER JOIN (SELECT d.id, d.nama, b.nilai as nilai FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id AND a.id = $komponen->id GROUP BY d.id) as tabel_$replace ON pegawai.id = tabel_$replace.id ";
+        }
+        // End Query Detail Gaji Karyawan
+
+        $getkomponengaji = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+        $hasilQuery = DB::select($query1.$query2.$query3.$query4);
+        $hasilQuery = collect($hasilQuery);
+
+        if($hasilQuery->isEmpty()){
+          return redirect()->route('batchpayroll.detail', ['id' => $id])->with('gagal', 'Tidak ada data');
+        }
+
+        Excel::create('Proses Payroll SPV Periode -'.$getbatch->tanggal_proses.' s-d '.$getbatch->tanggal_proses_akhir, function($excel) use($getSPV,$getAnak,$getkomponengaji,$getbatch,$hasilQuery) {
+          foreach ($getSPV as $spv) {
+            $excel->sheet($spv->nama, function($sheet) use($spv,$getAnak,$getkomponengaji,$getbatch,$hasilQuery) {
+              $sheet->loadView('pages.laporanPayroll.spv')
+                      ->with('getkomponengaji', $getkomponengaji)
+                      ->with('getSPV', $spv->id_kelompok_jabatan)
+                      ->with('getAnak', $getAnak)
+                      ->with('getbatch', $getbatch)
+                      ->with('hasilQuery', $hasilQuery);
+            });
+          }
+        })->download('xlsx');
+
+        return response()->json(['success' => 200]);
+
+    }
+
+    public function prosesAll($id)
+    {
+
+      $getCabangClient = DB::select("SELECT a.id, a.nama_cabang, e.nama_client
+                                      FROM master_client_cabang a, hr_pkwt b, pr_batch_payroll_detail c, master_pegawai d, master_client e
+                                      WHERE a.id = b.id_cabang_client
+                                      AND c.id_pegawai = d.id
+                                      AND b.id_pegawai = c.id_pegawai
+                                      AND a.id_client = e.id
+                                      AND c.id_batch_payroll = $id
+                                      GROUP BY a.nama_cabang");
+      $getCabangClient = collect($getCabangClient);
+
+      $getkomponengajinya = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+      // Get Batch Payrol
+      $getbatch = PrBatchPayroll::join('pr_periode_gaji', 'pr_batch_payroll.id_periode_gaji', '=', 'pr_periode_gaji.id')
+                                ->where('pr_batch_payroll.id', $id)->first();
+
+      // Start Query Detail Gaji Karyawan
+      $query1 = "SELECT pegawai.id, pegawai.nip, pegawai.nama as nama_pegawai, IFNULL(tabel_Workday.workday, 0) as Jumlah_Workday, IFNULL(tabel_Jabatan.nama_jabatan, 0) as Jabatan, IFNULL(tabel_Cabang.id_cabang, 0) as Cabang ";
+      $query2 = "FROM (select a.id, a.nip, a.nama from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
+      $query3 = "LEFT OUTER JOIN (SELECT d.id, d.nama, c.workday as workday FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id GROUP BY d.id) as tabel_Workday ON pegawai.id = tabel_Workday.id ";
+      $query4 = "LEFT OUTER JOIN(SELECT b.nama_jabatan, a.id FROM master_pegawai a, master_jabatan b WHERE a.id_jabatan = b.id) as tabel_Jabatan ON pegawai.id = tabel_Jabatan.id ";
+      $query5 = "LEFT OUTER JOIN(SELECT a.id as id_cabang, c.id_pegawai as id_pegawai FROM master_client_cabang a, hr_pkwt b, pr_batch_payroll_detail c WHERE a.id = b.id_cabang_client AND b.id_pegawai = c.id_pegawai AND c.id_batch_payroll = $id AND b.status_pkwt = 1 GROUP BY b.id_pegawai) as tabel_Cabang ON pegawai.id = tabel_Cabang.id_pegawai ";
+      foreach ($getkomponengajinya as $komponen) {
+        $replace = str_replace(' ', '_', $komponen->nama_komponen);
+        $query1 .=  ",IFNULL(tabel_$replace.nilai, 0) as Jumlah_$replace ";
+        $query2 .= "LEFT OUTER JOIN (SELECT d.id, d.nama, b.nilai as nilai FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id AND a.id = $komponen->id GROUP BY d.id) as tabel_$replace ON pegawai.id = tabel_$replace.id ";
+      }
+      // End Query Detail Gaji Karyawan
+
+      $getkomponengaji = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+      $hasilQuery = DB::select($query1.$query2.$query3.$query4.$query5);
+      $hasilQuery = collect($hasilQuery);
+
+      Excel::create('Proses Payroll Periode -'.$getbatch->tanggal_proses.' s-d '.$getbatch->tanggal_proses_akhir, function($excel) use($getkomponengaji,$getbatch,$hasilQuery,$getCabangClient) {
+          $excel->sheet('All Payroll', function($sheet) use($getkomponengaji,$getbatch,$hasilQuery,$getCabangClient) {
+            $sheet->loadView('pages.laporanPayroll.allProses')
+                    ->with('getkomponengaji', $getkomponengaji)
+                    ->with('getbatch', $getbatch)
+                    ->with('getCabangClient', $getCabangClient)
+                    ->with('hasilQuery', $hasilQuery);
+          });
+      })->download('xlsx');
+
+      return response()->json(['success' => 200]);
+
+    }
+}
