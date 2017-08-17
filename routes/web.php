@@ -223,17 +223,18 @@ Route::get('batch-payroll/refreshrowdatatables/{id}', 'BatchPayrollController@re
 Route::get('batch-payroll/process/{idbatch}/{data}', 'BatchPayrollController@process')->name('batchpayroll.process');
 
 ///// DETAIL BATCH PAYROLL //////
-Route::get('detail-batch-payroll/bind-to-table/{idbatch}/{idpegawai}', 'DetailBatchPayrollController@getdatakomponen')->name('detailbatchpayroll.bindtotable');
-Route::get('detail-batch-payroll/add-to-komponen/{idbatch}/{idpegawai}/{idkomponen}/{nilai}', 'DetailBatchPayrollController@addtodetailkomponen')->name('detailbatchpayroll.addkomponen');
-Route::get('detail-batch-payroll/cek-komponen-gaji/{idbatch}/{idpegawai}', 'DetailBatchPayrollController@cekkomponen')->name('detailbatchpayroll.cekkomponen');
-Route::get('detail-batch-payroll/get-gapok/{idpegawai}', 'DetailBatchPayrollController@getgajipokok')->name('detailbatchpayroll.getgapok');
-Route::get('detail-batch-payroll/delete-komponen-gaji/{id}', 'DetailBatchPayrollController@deletekomponengaji')->name('detailbatchpayroll.deletekomponen');
-Route::get('detail-batch-payroll/bind-for-absen/{id}', 'DetailBatchPayrollController@bindforabsen')->name('detailbatchpayroll.bindforabsen');
-Route::post('detail-batch-payroll/update-for-absen', 'DetailBatchPayrollController@updateforabsen')->name('detailbatchpayroll.updateforabsen');
+Route::get('batch-payroll-detail/bind-to-table/{idbatch}/{idpegawai}', 'BatchPayrollDetailController@getdatakomponen')->name('detailbatchpayroll.bindtotable');
+Route::get('batch-payroll-detail/add-to-komponen/{idbatch}/{idpegawai}/{idkomponen}/{nilai}', 'BatchPayrollDetailController@addtodetailkomponen')->name('detailbatchpayroll.addkomponen');
+Route::get('batch-payroll-detail/cek-komponen-gaji/{idbatch}/{idpegawai}', 'BatchPayrollDetailController@cekkomponen')->name('detailbatchpayroll.cekkomponen');
+Route::get('batch-payroll-detail/get-gapok/{idpegawai}', 'BatchPayrollDetailController@getgajipokok')->name('detailbatchpayroll.getgapok');
+Route::get('batch-payroll-detail/delete-komponen-gaji/{id}', 'BatchPayrollDetailController@deletekomponengaji')->name('detailbatchpayroll.deletekomponen');
+Route::get('batch-payroll-detail/bind-for-absen/{id}', 'BatchPayrollDetailController@bindforabsen')->name('detailbatchpayroll.bindforabsen');
+Route::post('batch-payroll-detail/update-for-absen', 'BatchPayrollDetailController@updateforabsen')->name('detailbatchpayroll.updateforabsen');
 
 ///// EXPORT IMPORT DETAIL BATCH PAYROLL ////
-Route::get('detail-batch-payroll/export/{idbatch}', 'ExportImportDetailBatchPayrollController@export')->name('detailbatchpayroll.export');
-Route::post('detail-batch-payroll/import', 'ExportImportDetailBatchPayrollController@import')->name('detailbatchpayroll.import');
+Route::get('batch-payroll-detail/export/{idbatch}', 'BatchPayrollDetailController@export')->name('detailbatchpayroll.export');
+Route::post('batch-payroll-detail/import', 'BatchPayrollDetailController@import')->name('detailbatchpayroll.import');
+
 
 ///// Export Batch Payrol /////
 Route::get('batch-payroll/laporan-prosesSPV/{id}', 'LaporanBatchPayrollController@prosesSPV')->name('laporan.prosesSPV');
