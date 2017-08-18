@@ -220,18 +220,19 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('rapelgaji.index') ? 'active' : '' }}
-        {{ Route::currentRouteNamed('rapelgaji.list') ? 'active' : '' }}
-        {{ Route::currentRouteNamed('rapelgaji.getclienthistory') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('rapelgaji*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-heart-o"></i>
           <span>Rapel Gaji</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('rapelgaji.index') ? 'active' : '' }}
-          {{ Route::currentRouteNamed('rapelgaji.getclienthistory') ? 'active' : '' }}"><a href="{{route('rapelgaji.index')}}"><i class="fa fa-circle-o"></i> Perhitungan Rapel Gaji</a></li>
-          <li class="{{ Route::currentRouteNamed('rapelgaji.list') ? 'active' : '' }}"><a href="{{route('rapelgaji.list')}}"><i class="fa fa-circle-o"></i> Lihat Data Rapel Gaji</a></li>
+          <li class="{{ Route::is('rapelgaji.index') ? 'active' : '' }}">
+            <a href="{{ route('rapelgaji.index') }}"><i class="fa fa-circle-o"></i> Perhitungan Rapel Gaji</a>
+          </li>
+          <li class="{{ Route::is('rapelgaji.list') ? 'active' : '' }}">
+            <a href="{{ route('rapelgaji.list') }}"><i class="fa fa-circle-o"></i> Lihat Data Rapel Gaji</a>
+          </li>
         </ul>
       </li>
       <li class="treeview">
