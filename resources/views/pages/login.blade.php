@@ -49,12 +49,12 @@
           @if(session('level') == 1)
           <div class="register-box-body">
             <div class="social-auth-links text-center">
-              <p>Hello, {{ Auth::user()->master_pegawai->nama }}</p>
+              <p>Hello, {{ Auth::user()->nama }}</p>
               <a href="{{ url('/dashboard') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-bitbucket"><i class="fa fa-dashboard"></i></i> Dashboard</a>
               <a href="{{ url('masterclient') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-dropbox"><i class="fa fa-building-o"></i> Master Client</a>
               <a href="{{ route('masterpegawai.index') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-google"><i class="fa fa-users"></i> Master Pegawai</a>
               <a href="{{ route('masterjabatan.create') }}" class="btn btn-block btn-social btn-maroon btn-flat btn-instagram"><i class="fa fa-briefcase"></i> Master Jabatan</a>
-              <a href="{{url('data-pkwt')}}" class="btn btn-block btn-social btn-maroon btn-flat btn-twitter"><i class="fa fa-file-text"></i> Manajemen PKWT</a>
+              <a href="{{url('pkwt')}}" class="btn btn-block btn-social btn-maroon btn-flat btn-twitter"><i class="fa fa-file-text"></i> Manajemen PKWT</a>
               <a href="{{ route('logout') }}" class="btn btn-block btn-social btn-flat btn-vk" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-sign-out"></i> Logout</a>
               <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                   {{ csrf_field() }}

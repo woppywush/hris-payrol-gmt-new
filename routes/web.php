@@ -62,15 +62,16 @@ Route::post('masterpegawai/savepenyakit', 'MasterPegawaiController@saveChangesPe
 
 Route::post('adddokumen', 'MasterPegawaiController@addDokumen');
 Route::get('masterpegawai/hapusdokumen/{id}', 'MasterPegawaiController@hapusDokumen');
-Route::get('uploaddokumen/hapusdokumen/{id}', 'UploadDocumentController@hapusDokumen');
 Route::get('masterpegawai/getdokumen/{id}', 'MasterPegawaiController@getdokumen');
 Route::post('masterpegawai/editdokumenpegawai', 'MasterPegawaiController@editdokumenpegawai');
 Route::post('masterpegawai/savepegawai', 'MasterPegawaiController@saveChangesPegawai');
 
-Route::resource('uploaddocument', 'UploadDocumentController');
-Route::get('upload/view-document', 'UploadDocumentController@getDocforDataTables')->name('datatables.doc');
-Route::get('upload/bind-data/{id}', 'UploadDocumentController@bindData');
-Route::post('upload/edit', 'UploadDocumentController@editDokumen')->name('upload.edit');
+Route::get('upload-dokumen', 'UploadDokumenController@index')->name('uploaddokumen.index');
+Route::post('upload-dokumen', 'UploadDokumenController@store')->name('uploaddokumen.store');
+Route::get('upload-dokumen/hapus/{id}', 'UploadDokumenController@hapusDokumen');
+Route::get('upload-dokumen/view-document', 'UploadDokumenController@getDocforDataTables')->name('datatables.doc');
+Route::get('upload-dokumen/bind-data/{id}', 'UploadDokumenController@bindData');
+Route::post('upload-dokumen/edit', 'UploadDokumenController@editDokumen')->name('upload.edit');
 
 Route::post('historipegawai/create', 'MasterPegawaiController@addhistoripegawai')->name('historipegawai.create');
 Route::get('historipegawai/bind-data/{id}', 'MasterPegawaiController@bindhistoriperingatan');
