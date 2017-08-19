@@ -43,6 +43,7 @@ class SpvController extends Controller
                           ->join('master_jabatan as E', 'SPV.id_jabatan', '=', 'E.id')
                           ->select('master_client.nama_client', 'A.nama_cabang', 'C.nama as nama_karyawan', 'D.tanggal_awal_pkwt', 'D.tanggal_akhir_pkwt', 'E.nama_jabatan', 'SPV.nama as spv')
                           ->where('E.id', '999')
+                          ->where('c.status', 1)
                           ->where('master_client.id',  $id_client)
                           ->where('D.status_pkwt', '1')
                           ->where('D.flag_terminate', '1')
@@ -50,6 +51,7 @@ class SpvController extends Controller
 
       $spvExist = MasterPegawai::select('master_pegawai.id','master_pegawai.nip','master_pegawai.nama')
                                 ->where('master_pegawai.id_jabatan', '=', '999')
+                                ->where('master_pegawai.status', 1)
                                 ->get();
 
       return view('pages.supervisi.index', compact('getSpv', 'getClient', 'getExistClient', 'spvExist', 'id_client'));

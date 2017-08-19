@@ -83,8 +83,8 @@ class PkwtController extends Controller
 
     public function create()
     {
-      $getnip = MasterPegawai::select('id','nip','nama')->where('id_jabatan', '<', '990')->get();
-      $get_kel_jabatan = MasterPegawai::select('id','nip','nama')->where('id_jabatan', '=', '999')->get();
+      $getnip = MasterPegawai::select('id','nip','nama')->where('id_jabatan', '<', '990')->where('status', 1)->get();
+      $get_kel_jabatan = MasterPegawai::select('id','nip','nama')->where('id_jabatan', '=', '999')->where('status', 1)->get();
 
       $getclient  = MasterClient::select('id', 'nama_client')->get();
       $getcabang = MasterClientCabang::select('id','kode_cabang','nama_cabang', 'id_client')->get();
