@@ -300,3 +300,4 @@ Route::get('batch-thr/process/{id}', 'THRController@process')->name('thr.process
 Route::get('batch-thr/destroy/{id}', 'THRController@destroy')->name('thr.destroy');
 Route::get('batch-thr/bind/{id}', 'THRController@bind')->name('thr.bind');
 Route::post('batch-thr/update/{id}', 'THRController@update')->name('thr.update');
+Route::get('batch-thr/laporan-proses-thr/{id}', 'ThrController@prosesThr')->name('laporan.prosesThr');
