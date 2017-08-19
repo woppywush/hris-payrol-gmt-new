@@ -16,7 +16,7 @@ class CreateMasterPegawaiTable extends Migration
         Schema::create('master_pegawai', function(Blueprint $table){
           $table->increments('id');
           $table->integer('id_jabatan')->unsigned();
-          $table->integer('id_bank')->unsigned();
+          $table->integer('id_bank')->unsigned()->nullable();
           $table->string('nip');
           $table->string('nip_lama')->nullable();
           $table->string('no_ktp');

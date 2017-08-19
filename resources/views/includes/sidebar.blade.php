@@ -30,28 +30,20 @@
       </a>
     </li>
     @if (session('level')=="1")
-      <li class="treeview {{ Route::currentRouteNamed('masterpegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterpegawai.show') ? 'active' : '' }}{{ Route::currentRouteNamed('masterpegawai.create') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('masterpegawai*') ? 'active' : '' }}{{ Route::is('importPegawai*') ? 'active' : '' }}{{ Route::is('uploaddokumen*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-users"></i>
           <span>Master Pegawai</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('masterpegawai.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterpegawai.show') ? 'active' : '' }}{{ Route::currentRouteNamed('masterpegawai.create') ? 'active' : '' }}"><a href="{{ route('masterpegawai.index') }}"><i class="fa fa-circle-o"></i> Data Pegawai</a></li>
-        </ul>
-      </li>
-      <li class="treeview {{ Route::is('uploaddokumen*') ? 'active' : '' }}{{ Route::currentRouteNamed('import') ? 'active' : '' }}">
-        <a href="#">
-          <i class="fa fa-newspaper-o"></i>
-          <span>Dokumen Pegawai</span>
-          <i class="fa fa-angle-left pull-right"></i>
-        </a>
-        <ul class="treeview-menu">
-          <li class="{{ Route::is('uploaddokumen*') ? 'active' : '' }}">
-            <a href="{{ route('uploaddokumen.index') }}"><i class="fa fa-circle-o"></i> Kelola Dokumen Pegawai</a>
+          <li class="{{ Route::is('masterpegawai*') ? 'active' : '' }}">
+            <a href="{{ route('masterpegawai.index') }}"><i class="fa fa-circle-o"></i> Data Pegawai</a></li>
+          <li class="{{ Route::is('importPegawai*') ? 'active' : '' }}">
+            <a href="{{ route('importPegawai.index') }}"><i class="fa fa-circle-o"></i> Import Data Pegawai</a>
           </li>
-          <li class="{{ Route::is('import') ? 'active' : '' }}">
-            <a href="{{ url('import') }}"><i class="fa fa-circle-o"></i> Import Data Pegawai</a>
+          <li class="{{ Route::is('uploaddokumen*') ? 'active' : '' }}">
+            <a href="{{ route('uploaddokumen.index') }}"><i class="fa fa-circle-o"></i> Upload Dokumen Pegawai</a>
           </li>
         </ul>
       </li>

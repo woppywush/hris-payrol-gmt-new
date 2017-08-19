@@ -158,11 +158,11 @@ Route::post('masterbank/edit', 'MasterBankController@edit')->name('masterbank.ed
 Route::get('masterbank/hapusbank/{id}', ['as'=>'masterbank.hapusbank', 'uses'=>'MasterBankController@hapusBank']);
 //----- Start Master Bank -----//
 
-
-
-Route::get('import', ['as' => 'import', 'uses' => 'ImportDataController@index']);
-Route::post('import-proses', 'ImportDataController@proses');
-Route::get('import-template/{type}', 'ImportDataController@downloadExcel');
+//----- Start Import Data Pegawai -----//
+Route::get('import-pegawai', 'ImportPegawaiController@index')->name('importPegawai.index');
+Route::get('import-pegawai/getTemplate', 'ImportPegawaiController@getTemplate')->name('importPegawai.getTemplate');
+Route::post('import-pegawai', 'ImportPegawaiController@proses')->name('importPegawai.proses');
+//----- END Import Data Pegawai -----//
 
 ///// KOMPONEN GAJI VARIABEL//////
 Route::get('komponen-gaji', 'KomponenGajiController@index')->name('komgaji.index');
