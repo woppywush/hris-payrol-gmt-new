@@ -140,11 +140,10 @@ Route::post('departemen/{id}', 'MasterClientCabangDepartemenController@update')-
 
 
 //----- Start Master User -----//
-Route::resource('useraccount', 'UserController');
 Route::get('useraccount', 'UserController@index')->name('useraccount.index');
 Route::post('useraccount', 'UserController@store')->name('useraccount.store');
 Route::get('useraccount/delete/{id}', 'UserController@delete');
-Route::get('useraccount/kelola-profile/{id}', 'UserController@kelolaprofile')->name('useraccount.profile');
+Route::get('useraccount/kelola-profile', 'UserController@kelolaprofile')->name('useraccount.profile');
 Route::post('useraccount/update-profile', 'UserController@updateprofile')->name('useraccount.edit');
 Route::post('useraccount/update-password', 'UserController@updatepassword')->name('useraccount.editpassword');
 //----- End Master User -----//

@@ -52,7 +52,7 @@
           <li class="user-footer">
             <div class="pull-left">
               @if(Auth::check())
-              <a href="{{ url('useraccount/kelola-profile') }}/{{Auth::user()->id}}" class="btn btn-default btn-flat">Profile</a>
+              <a href="{{ route('useraccount.profile') }}" class="btn btn-default btn-flat">Profile</a>
               @endif
             </div>
             <div class="pull-right">
