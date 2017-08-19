@@ -25,7 +25,12 @@ class MasterClientController extends Controller
 
     public function index()
     {
-        $getClient = MasterClient::paginate(12);
+        $getClient = DB::table('master_client')
+                    ->select(DB::raw('IFNULL(count(master_client_cabang.id_client),0) as hitungCabang, master_client.*'))
+                    ->leftjoin('master_client_cabang', 'master_client_cabang.id_client' , '=', 'master_client.id')
+                    ->groupBy('master_client.id')
+                    ->latest('master_client.updated_at')
+                    ->paginate(12);
 
         return view('pages.masterclient.index', compact('getClient'));
     }
@@ -87,5 +92,5 @@ class MasterClientController extends Controller
         return view('pages.masterclient.cabang', compact('MasterClient','CabangClient','AutoNumber'));
     }
 
-    
+
 }

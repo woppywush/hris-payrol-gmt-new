@@ -4,15 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use Carbon\Carbon;
-use Auth;
-use DB;
 use App\Models\MasterUser;
 use App\Models\HrPkwt;
 use App\Models\MasterPegawai;
 use App\Models\MasterClient;
 use App\Models\PrBatchPayroll;
 use App\Models\PrBatchProcessed;
+
+use Carbon\Carbon;
+use Auth;
+use DB;
 
 class DashboardController extends Controller
 {
