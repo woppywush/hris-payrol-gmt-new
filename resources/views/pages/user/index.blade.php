@@ -166,7 +166,7 @@
               @if(count($getuser)!=0)
                 @foreach($getuser as $key)
                   <tr>
-                    <td>{{$i}}</td>
+                    <td>{{$i++}}</td>
                     <td>{{$key->username}}</td>
                     <td>
                       @if($key->level=="1")
@@ -179,20 +179,17 @@
                     </td>
                     <td>{{$key->created_at}}</td>
                     <td>
-                      @if(Auth::check())
-                      @if(Auth::user()->pegawai_id==$key->pegawai_id)
-                        <span data-toggle="tooltip" title="Anda sedang login menggunakan akun ini">
-                          <a class="btn btn-xs btn-danger" disabled><i class="fa fa-remove"></i></a>
-                        </span>
-                      @else
-                        <span data-toggle="tooltip" title="Hapus Data">
-                          <a href="" class="btn btn-xs btn-danger hapus" data-toggle="modal" data-target="#myModal" data-value="{{$key->id}}"><i class="fa fa-remove"></i></a>
-                        </span>
-                      @endif
-                      @endif
+                    @if(Auth::user()->id==$key->id)
+                      <span data-toggle="tooltip" title="Anda sedang login menggunakan akun ini">
+                        <a class="btn btn-xs btn-danger" disabled><i class="fa fa-remove"></i></a>
+                      </span>
+                    @else
+                      <span data-toggle="tooltip" title="Hapus Data">
+                        <a href="" class="btn btn-xs btn-danger hapus" data-toggle="modal" data-target="#myModal" data-value="{{$key->id}}"><i class="fa fa-remove"></i></a>
+                      </span>
+                    @endif
                     </td>
                   </tr>
-                  <?php $i++; ?>
                 @endforeach
               @else
 

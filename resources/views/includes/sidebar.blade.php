@@ -297,7 +297,7 @@
         <i class="fa fa-angle-left pull-right"></i>
       </a>
       <ul class="treeview-menu">
-        <li class="{{ Route::is('laporanpegawai*') ? 'active' : '' }}{{ Route::is('proseslaporan*') ? 'active' : '' }}"><a href="{{ route('laporanpegawai') }}"><i class="fa fa-circle-o"></i> Laporan Data Pegawai</a></li>
+        <li class="{{ Route::is('laporanpegawai*') ? 'active' : '' }}{{ Route::is('proseslaporan*') ? 'active' : '' }}"><a href="{{ route('laporanpegawai.index') }}"><i class="fa fa-circle-o"></i> Laporan Data Pegawai</a></li>
       </ul>
     </li>
     <li class="treeview {{ Route::is('batchpayroll*') ? 'active' : '' }}">
@@ -308,6 +308,18 @@
       </a>
       <ul class="treeview-menu">
         <li class="{{ Route::is('batchpayroll*') ? 'active' : '' }}"><a href="{{ route('batchpayroll.index') }}"><i class="fa fa-circle-o"></i> Generate Batch</a></li>
+      </ul>
+    </li>
+    <li class="treeview {{ Route::is('thr*') ? 'active' : '' }}">
+      <a href="#">
+        <i class="fa fa-star"></i>
+        <span>Proses THR</span>
+        <i class="fa fa-angle-left pull-right"></i>
+      </a>
+      <ul class="treeview-menu">
+        <li class="{{ Route::is('thr*') ? 'active' : '' }}">
+          <a href="{{route('thr.index')}}"><i class="fa fa-circle-o"></i> Perhitungan THR</a>
+        </li>
       </ul>
     </li>
     @endif

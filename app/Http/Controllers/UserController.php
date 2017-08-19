@@ -62,7 +62,7 @@ class UserController extends Controller
       $user->email = $request->email;
       $user->login_count = 1;
       $user->level = $request->level;
-      $user->url_foto = 'userdefault.png';
+      $user->url_foto = 'user-not-found.png';
       $user->save();
 
       return redirect()->route('useraccount.index')->with('message', 'Berhasil Menambahkan User');

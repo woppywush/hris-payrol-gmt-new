@@ -115,8 +115,8 @@ class DashboardController extends Controller
 
         $getclient = MasterClient::
           select('master_client.id', 'master_client.nama_client', DB::RAW('count(*) as jumlah_cabang'))
-          ->join('cabang_client', 'master_client.id', '=', 'cabang_client.id_client')
-          ->groupby('cabang_client.id_client')
+          ->join('master_client_cabang', 'master_client.id', '=', 'master_client_cabang.id_client')
+          ->groupby('master_client_cabang.id_client')
           ->get();
 
         return view('pages.dashboard.index')
