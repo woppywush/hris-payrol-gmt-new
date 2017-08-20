@@ -226,8 +226,8 @@
           <li class="{{ Route::is('rapelgaji.index') ? 'active' : '' }}">
             <a href="{{ route('rapelgaji.index') }}"><i class="fa fa-circle-o"></i> Perhitungan Rapel Gaji</a>
           </li>
-          <li class="{{ Route::is('rapelgaji.list') ? 'active' : '' }}">
-            <a href="{{ route('rapelgaji.list') }}"><i class="fa fa-circle-o"></i> Lihat Data Rapel Gaji</a>
+          <li class="{{ Route::is('rapelgaji.view') ? 'active' : '' }}">
+            <a href="{{ route('rapelgaji.view') }}"><i class="fa fa-circle-o"></i> Lihat Data Rapel Gaji</a>
           </li>
         </ul>
       </li>

@@ -285,19 +285,19 @@ Route::get('cuti/delete/{id}', 'CutiController@delete')->name('cuti.delete');
 
 ///// RAPEL GAJI /////
 Route::get('rapel-gaji', 'RapelGajiController@index')->name('rapelgaji.index');
-Route::get('rapel-gaji/list', 'RapelGajiController@list')->name('rapelgaji.list');
+Route::get('rapel-gaji/view', 'RapelGajiController@view')->name('rapelgaji.view');
 Route::get('rapel-gaji/detail/{id}', 'RapelGajiController@detail')->name('rapelgaji.detail');
 Route::post('rapel-gaji/getclienthistory', 'RapelGajiController@getclienthistory')->name('rapelgaji.getclienthistory');
 Route::get('rapel-gaji/proses/{id}', 'RapelGajiController@proses')->name('rapelgaji.proses');
 
 
 ///// THR ////
-Route::get('batch-thr', 'THRController@index')->name('thr.index');
-Route::post('batch-thr/store', 'THRController@store')->name('thr.store');
-Route::get('batch-thr/detail/{id}', 'THRController@detail')->name('thr.detail');
-Route::get('batch-thr/detail/getdata/{id}', 'THRController@getdata')->name('thr.detail-getdata');
-Route::get('batch-thr/process/{id}', 'THRController@process')->name('thr.process');
-Route::get('batch-thr/destroy/{id}', 'THRController@destroy')->name('thr.destroy');
-Route::get('batch-thr/bind/{id}', 'THRController@bind')->name('thr.bind');
-Route::post('batch-thr/update/{id}', 'THRController@update')->name('thr.update');
+Route::get('batch-thr', 'ThrController@index')->name('thr.index');
+Route::post('batch-thr/store', 'ThrController@store')->name('thr.store');
+Route::get('batch-thr/detail/{id}', 'ThrController@detail')->name('thr.detail');
+Route::get('batch-thr/detail/getdata/{id}', 'ThrController@getdata')->name('thr.detail-getdata');
+Route::get('batch-thr/process/{id}', 'ThrController@process')->name('thr.process');
+Route::get('batch-thr/destroy/{id}', 'ThrController@destroy')->name('thr.destroy');
+Route::get('batch-thr/bind/{id}', 'ThrController@bind')->name('thr.bind');
+Route::post('batch-thr/update/{id}', 'ThrController@update')->name('thr.update');
 Route::get('batch-thr/laporan-proses-thr/{id}', 'ThrController@prosesThr')->name('laporan.prosesThr');

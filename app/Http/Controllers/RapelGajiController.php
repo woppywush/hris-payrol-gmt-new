@@ -41,7 +41,7 @@ class RapelGajiController extends Controller
         ->with('getCabang', $getCabang);
     }
 
-    public function list()
+    public function view()
     {
       $get = PrRapelGaji::select('pr_rapel_gaji.id as id_rapel', 'master_client.nama_client', 'master_client_cabang.nama_cabang', 'pr_rapel_gaji.tanggal_proses', 'pr_histori_gaji_pokok_per_client.nilai')
         ->join('pr_histori_gaji_pokok_per_client', 'pr_rapel_gaji.id_histori', '=', 'pr_histori_gaji_pokok_per_client.id')
