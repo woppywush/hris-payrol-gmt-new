@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 
 use App\Models\HrPkwt;
 use App\Models\MasterPegawai;
@@ -14,6 +15,7 @@ use Datatables;
 use Carbon\Carbon;
 use DB;
 use Validator;
+use Excel;
 
 class PkwtController extends Controller
 {
@@ -267,6 +269,214 @@ class PkwtController extends Controller
       $setHistori->save();
 
       return redirect()->route('pkwt.detail', $bindPegawai->nip)->with('terminate', 'PKWT Berhasil di-Terminate.');
+    }
+
+
+    public function import()
+    {
+      return view('pages.pkwt.import');
+    }
+
+    public function getTemplate()
+    {
+      $pegawai = MasterPegawai::select('nip', 'nama', 'jenis_kelamin')
+                                ->where('status', 1)
+                                ->get()
+                                ->toArray();
+
+      $supervisi = MasterPegawai::select('nip as nip_spv', 'nama', 'jenis_kelamin')
+                                ->where('id_jabatan', '=', '999')
+                                ->get()
+                                ->toArray();
+
+      $client = MasterClientCabang::join('master_client', 'master_client.id', '=', 'master_client_cabang.id_client')
+                                  ->select('master_client_cabang.kode_cabang','master_client.nama_client', 'master_client_cabang.nama_cabang')
+                                  ->get()
+                                  ->toArray();
+
+      return Excel::create('Template Import Data Pkwt', function($excel) use($pegawai, $supervisi, $client)
+      {
+        $excel->sheet('Data-Import', function($sheet)
+        {
+          $sheet->setOrientation('landscape');
+          $sheet->row(1, array('nip', 'kode_cabang','nip_spv', 'tanggal_masuk_gmt', 'tanggal_masuk_client', 'tanggal_awal_pkwt', 'tanggal_akhir_pkwt', 'status_karyawan_pkwt', 'status_pkwt'));
+          $sheet->setColumnFormat(array(
+            'A' => '@',
+            'B' => '@',
+            'C' => '@',
+            'D' => 'yyyy-mm-dd',
+            'E' => 'yyyy-mm-dd',
+            'F' => 'yyyy-mm-dd',
+            'G' => 'yyyy-mm-dd',
+            'H' => '@',
+            'I' => '@',
+          ));
+        });
+
+        $excel->sheet('pegawai', function($sheet) use($pegawai)
+        {
+          $sheet->row(1, array('Untuk Import Data PKWT Gunakan NIP'));
+          $sheet->mergeCells('A1:C1');
+          $sheet->cells('A1:C1', function($cells){
+            $cells->setBackground('#000000');
+            $cells->setFontColor('#ffffff');
+            $cells->setFontWeight('bold');
+            $cells->setFontSize(16);
+          });
+          $sheet->fromArray($pegawai, null, 'A2', true);
+          $sheet->row(2, array('nip','nama', 'jenis_kelamin'));
+          $sheet->setAllBorders('thin');
+          $sheet->setFreeze('A1');
+
+          $sheet->cells('A2:C2', function($cells){
+            $cells->setBackground('#000000');
+            $cells->setFontColor('#ffffff');
+            $cells->setFontWeight('bold');
+          });
+
+
+        });
+
+        $excel->sheet('supervisi', function($sheet) use($supervisi)
+        {
+          $sheet->fromArray($supervisi, null, 'A1', true);
+          $sheet->row(1, array('nip_spv','nama','jenis_kelamin'));
+          $sheet->setAllBorders('thin');
+          $sheet->setFreeze('A1');
+
+          $sheet->cells('A1:C1', function($cells){
+            $cells->setBackground('#000000');
+            $cells->setFontColor('#ffffff');
+            $cells->setFontWeight('bold');
+          });
+        });
+
+        $excel->sheet('client', function($sheet) use($client)
+        {
+          $sheet->fromArray($client, null, 'A1', true);
+          $sheet->row(1, array('kode_cabang', 'nama_client', 'nama_cabang'));
+          $sheet->setAllBorders('thin');
+          $sheet->setFreeze('A1');
+
+          $sheet->cells('A1:C1', function($cells){
+            $cells->setBackground('#000000');
+            $cells->setFontColor('#ffffff');
+            $cells->setFontWeight('bold');
+          });
+        });
+
+        $excel->sheet('tambahan', function($sheet)
+        {
+          $sheet->row(3, array('Status Karyawan', 'kode_input'));
+          $sheet->row(4, array('Kontrak', '1'));
+          $sheet->row(5, array('Freelance', '2'));
+          $sheet->row(6, array('Tetap', '3'));
+
+          $sheet->row(7, array('Status PKWT', 'kode_input'));
+          $sheet->row(8, array('Aktif', '1'));
+          $sheet->row(9, array('Tidak Aktif', '0'));
+        });
+
+      })->download('xlsx');
+
+
+    }
+
+    public function proses(Request $request)
+    {
+        $timestamps = date('Y-m-d h:m:s');
+
+        if(Input::hasFile('importPkwt')){
+          $path = Input::file('importPkwt')->getRealPath();
+          $data = Excel::selectSheets('Data-Import')->load($path, function($reader) {})->get();
+
+          $getPegawai = MasterPegawai::select('id','nip')->where('status', 1)->get();
+          $getCabang = MasterClientCabang::select('id', 'kode_cabang')->get();
+          $getPkwt = HrPkwt::where('status_pkwt', 1)->where('flag_terminate', 1)->get();
+
+          if(!empty($data) && $data->count()){
+            foreach ($data as $key) {
+
+              foreach ($getPegawai as $pegawai) {
+                if($pegawai->nip == $key->nip){
+                  $nip = $pegawai->id;
+                }
+              }
+
+              foreach ($getPegawai as $spv) {
+                if($spv->nip == $key->nip_spv){
+                  $nip_spv = $spv->id;
+                }
+              }
+
+              foreach ($getCabang as $cabang) {
+                if($cabang->kode_cabang == $key->kode_cabang){
+                  $cabangnya = $cabang->id;
+                }
+              }
+
+              // foreach ($getPkwt as $pkwt) {
+              //   if($pkwt->id_pegawai == $nip){
+              //     if($pkwt->tanggal_akhir_pkwt < $key->tanggal_awal_pkwt){
+              //       $insert[] = ['id_pegawai'           => $nip,
+              //                    'id_cabang_client'     => $cabangnya,
+              //                    'id_kelompok_jabatan'  => $nip_spv,
+              //                    'tanggal_masuk_gmt'    => $key->tanggal_masuk_gmt,
+              //                    'tanggal_masuk_client' => $key->tanggal_masuk_client,
+              //                    'tanggal_awal_pkwt'    => $key->tanggal_awal_pkwt,
+              //                    'tanggal_akhir_pkwt'   => $key->tanggal_akhir_pkwt,
+              //                    'status_karyawan_pkwt' => $key->status_karyawan_pkwt,
+              //                    'status_pkwt'          => $key->status_pkwt,
+              //                    'flag_terminate'       => 1,
+              //                    'created_at'           => $timestamps,
+              //                    'updated_at'           => $timestamps,
+              //                  ];
+              //     }else{
+              //       $gagal[] = ['id_pegawai'           => $nip,
+              //                    'id_cabang_client'     => $cabangnya,
+              //                    'id_kelompok_jabatan'  => $nip_spv,
+              //                    'tanggal_masuk_gmt'    => $key->tanggal_masuk_gmt,
+              //                    'tanggal_masuk_client' => $key->tanggal_masuk_client,
+              //                    'tanggal_awal_pkwt'    => $key->tanggal_awal_pkwt,
+              //                    'tanggal_akhir_pkwt'   => $key->tanggal_akhir_pkwt,
+              //                    'status_karyawan_pkwt' => $key->status_karyawan_pkwt,
+              //                    'status_pkwt'          => $key->status_pkwt,
+              //                    'flag_terminate'       => 1,
+              //                    'created_at'           => $timestamps,
+              //                    'updated_at'           => $timestamps,
+              //                  ];
+              //     }
+              //   }
+              // }
+
+              $insert[] = ['id_pegawai'           => $nip,
+                           'id_cabang_client'     => $cabangnya,
+                           'id_kelompok_jabatan'  => $nip_spv,
+                           'tanggal_masuk_gmt'    => $key->tanggal_masuk_gmt,
+                           'tanggal_masuk_client' => $key->tanggal_masuk_client,
+                           'tanggal_awal_pkwt'    => $key->tanggal_awal_pkwt,
+                           'tanggal_akhir_pkwt'   => $key->tanggal_akhir_pkwt,
+                           'status_karyawan_pkwt' => $key->status_karyawan_pkwt,
+                           'status_pkwt'          => $key->status_pkwt,
+                           'flag_terminate'       => 1,
+                           'created_at'           => $timestamps,
+                           'updated_at'           => $timestamps,
+                         ];
+            }
+
+            if(!empty($insert)){
+              DB::table('hr_pkwt')->insert($insert);
+
+              if(!empty($gagal)){
+                return redirect()->route('pkwtImport')->with('message', 'Berhasil Meng-Import Data PKWT.')->with('gagal');
+              }
+
+              return redirect()->route('pkwtImport')->with('message', 'Berhasil Meng-Import Data PKWT.');
+            }
+          }
+        }
+
+        return back()->with('error', 'Harap Pilih File Sesuai Dengan Template');
     }
 
 

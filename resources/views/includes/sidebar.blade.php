@@ -84,11 +84,14 @@
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::is('pkwt*') ? 'active' : '' }}">
-            <a href="{{ route('pkwt.index') }}"><i class="fa fa-circle-o"></i>Data PKWT</a>
+          <li class="{{ Route::is('pkwt.*') ? 'active' : '' }}">
+            <a href="{{ route('pkwt.index') }}"><i class="fa fa-circle-o"></i>PKWT</a>
           </li>
           <li class="{{ Route::is('supervisi*') ? 'active' : '' }}">
-            <a href="{{ route('supervisi.index') }}"><i class="fa fa-circle-o"></i>Manajement Supervisi</a>
+            <a href="{{ route('supervisi.index') }}"><i class="fa fa-circle-o"></i>Supervisi</a>
+          </li>
+          <li class="{{ Route::is('pkwtImport') ? 'active' : '' }}">
+            <a href="{{ route('pkwtImport') }}"><i class="fa fa-circle-o"></i>Import PKWT</a>
           </li>
         </ul>
       </li>
