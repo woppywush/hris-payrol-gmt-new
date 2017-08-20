@@ -79,7 +79,7 @@
                   <td>{{$key->nilai}}</td>
                   <td>
                     <span data-toggle="tooltip" data-original-title="Lihat Detail">
-                      <a href="{{route('rapelgaji.detail', $key->id_rapel)}}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>
+                      <a href="{{route('rapelgaji.detail', $exp[0])}}" class="btn btn-xs btn-primary"><i class="fa fa-eye"></i></a>
                     </span>
                   </td>
                 </tr>

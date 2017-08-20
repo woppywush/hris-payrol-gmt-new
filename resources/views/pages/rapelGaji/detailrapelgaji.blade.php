@@ -11,7 +11,7 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="{{route('rapelgaji.list')}}"> List Rapel Gaji</a></li>
+    <li><a href="{{route('rapelgaji.view')}}"> List Rapel Gaji</a></li>
     <li class="active">Detail Rapel Gaji</li>
   </ol>
 @stop
@@ -68,14 +68,12 @@
             <tbody>
               @php
                 $tanggalproses = null;
-                $jumlahbulanselisih = 0;
                 $totalrapelgaji = 0;
                 $totalpegawai = 0;
               @endphp
               @foreach ($data as $key)
                 @php
                   $tanggalproses = $key->tanggal_proses;
-                  $jumlahbulanselisih = $key->jml_bulan_selisih;
                   $totalrapelgaji = $totalrapelgaji + $key->nilai_rapel;
                   $totalpegawai++;
                 @endphp
@@ -114,14 +112,6 @@
                 </td>
                 <td>
                   : &nbsp;&nbsp;{{$totalpegawai}} Pegawai</li>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <li>Jumlah Bulan Selisih&nbsp;&nbsp;&nbsp;
-                </td>
-                <td>
-                  : &nbsp;&nbsp;{{$jumlahbulanselisih}} Bulan</li>
                 </td>
               </tr>
               <tr>

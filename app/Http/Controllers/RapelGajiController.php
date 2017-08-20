@@ -52,12 +52,15 @@ class RapelGajiController extends Controller
       return view('pages.rapelGaji.listrapelgaji')->with('data', $get);
     }
 
-    public function detail()
+    public function detail($id)
     {
+     
       $get = PrRapelGajiDetail::select('nip', 'nama', 'tanggal_proses', 'jml_bulan_selisih', 'nilai_rapel')
         ->join('master_pegawai', 'master_pegawai.id', '=', 'pr_rapel_gaji_detail.id_pegawai')
         ->join('pr_rapel_gaji', 'pr_rapel_gaji.id', '=', 'pr_rapel_gaji_detail.id_rapel_gaji')
+        ->where('tanggal_proses','like', "$id%")
         ->get();
+        // dd($get);
 
       return view('pages.rapelGaji.detailrapelgaji')->with('data', $get);
     }
@@ -150,6 +153,6 @@ class RapelGajiController extends Controller
         }
       }
 
-      return redirect()->route('rapelgaji.list')->with('message', 'Berhasil memproses rapel gaji.');
+      return redirect()->route('rapelgaji.view')->with('message', 'Berhasil memproses rapel gaji.');
     }
 }

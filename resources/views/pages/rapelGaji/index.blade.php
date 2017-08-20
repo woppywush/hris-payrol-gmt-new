@@ -146,9 +146,9 @@
                         </td>
                         <td>
                           @if ($key->flag_rapel_gaji==0)
-                            <a href="{{route('rapelgaji.proses', $key->id)}}" class="btn btn-xs btn-primary">Generate Batch</a>
+                            <a href="{{route('rapelgaji.proses', $key->id)}}" class="btn btn-xs btn-warning">Generate Batch</a>
                           @else
-                            <button type="button" name="button" class="btn btn-xs btn-primary" disabled="">Generate Batch</button>
+                            <button type="button" name="button" class="btn btn-xs btn-success" disabled="">Generate Batch</button>
                           @endif
                         </td>
                       </tr>

@@ -113,6 +113,7 @@
                         <th>Tanggal Awal PKWT</th>
                         <th>Tanggal Akhir PKWT</th>
                         <th>Kelompok Jabatan</th>
+                        <th>Status Periode</th>
                         <th>Keterangan</th>
                       </tr>
                       <thead>
@@ -125,6 +126,11 @@
                               <td>{{ $key->tanggal_awal_pkwt }}</td>
                               <td>{{ $key->tanggal_akhir_pkwt }}</td>
                               <td>{{ $key->spv_nama }}</td>
+                              @if($key->tanggal_periode==null)
+                                <td><span class='label'>Belum Terdaftar Periode</span></td>
+                              @else
+                               <td><span class='label bg-red'>Terdaftar Pada Tanggal {{ $key->tanggal_periode }}</span></td>
+                              @endif
                               <td><?php
                               $date1=date_create($key->tanggal_akhir_pkwt);
                               $date2=date_create(gmdate("Y-m-d", time()+60*60*7));

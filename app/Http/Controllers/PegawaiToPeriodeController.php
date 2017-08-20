@@ -45,13 +45,15 @@ class PegawaiToPeriodeController extends Controller
                         ->join('master_client_cabang', 'master_client_cabang.id', '=', 'hr_pkwt.id_cabang_client')
                         ->join('master_client', 'master_client.id', '=', 'master_client_cabang.id_client')
                         ->join('master_jabatan', 'master_jabatan.id', '=', 'master_pegawai.id_jabatan')
-                        ->select('hr_pkwt.*', 'master_pegawai.nama', 'master_pegawai.id as idpegawai', 'spv.nama as spv_nama', 'master_client.nama_client', 'master_client_cabang.nama_cabang')
+                        ->leftJoin('pr_periode_gaji_detail as periode_detail', 'master_pegawai.id', '=', 'periode_detail.id_pegawai')
+                        ->leftJoin('pr_periode_gaji as periode_gaji', 'periode_detail.id_periode_gaji', '=', 'periode_gaji.id')
+                        ->select('hr_pkwt.*', 'master_pegawai.nama', 'master_pegawai.id as idpegawai', 'spv.nama as spv_nama', 'master_client.nama_client', 'master_client_cabang.nama_cabang', 'periode_detail.id_pegawai as periode_pegawai','periode_detail.id_periode_gaji as periode_gaji', 'periode_gaji.tanggal as tanggal_periode')
                         ->where('status_pkwt', 1)
                         ->where('master_client_cabang.id', $idCabangClient)
                         ->where('master_pegawai.status', 1)
                         ->where('flag_terminate', 1)
                         ->get();
-
+      // dd($pkwtActive);
       return view('pages.periode-gaji.setPegawai', compact('periodeGaji','getClient', 'idCabangClient', 'pkwtActive', 'getCabang'));
     }
 

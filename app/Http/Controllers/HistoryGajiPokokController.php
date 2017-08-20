@@ -28,7 +28,7 @@ class HistoryGajiPokokController extends Controller
 
     public function index() {
       $listNew = DB::select("select a.*, b.id as client_id, b.kode_client as kode_client, b.nama_client as nama_client,
-		    (select count(1) from hr_pkwt d where d.id_cabang_client = a.id) as total_pegawai
+		    (select count(DISTINCT d.id_pegawai) from hr_pkwt d where d.id_cabang_client = a.id) as total_pegawai
         FROM master_client_cabang a left join master_client b on a.id_client = b.id where exists (select * from hr_pkwt c where c.id_cabang_client = a.id)");
 
       $getlistClientNew = collect($listNew);
@@ -47,6 +47,8 @@ class HistoryGajiPokokController extends Controller
 
     public function store(Request $request)
     {
+      // dd($request);
+     
       $message = [
         'gaji_pokok.required' => 'Wajib di isi',
         'keterangan.required' => 'Wajib di isi',
@@ -76,12 +78,25 @@ class HistoryGajiPokokController extends Controller
               break;
             }
           }
-          $newrow = new PrHistoriGajiPokokPerClient;
-          $newrow->id_client = $idclient;
-          $newrow->id_cabang_client = $key1;
-          $newrow->tanggal_penyesuaian = date('Y-m-d');
-          $newrow->nilai = $request->gaji_pokok;
-          $newrow->save();
+          
+          $checkhistory2 = PrHistoriGajiPokokPerClient::where('id_client', $idclient)->where('tanggal_penyesuaian','like',
+            "$request->periode_tahun%")->first();
+          if ($checkhistory2 == null) {
+            $newrow = new PrHistoriGajiPokokPerClient;
+            $newrow->id_client = $idclient;
+            $newrow->id_cabang_client = $key1;
+            $newrow->tanggal_penyesuaian = date('Y-m-d');
+            $newrow->nilai = $request->gaji_pokok;
+            $newrow->save();
+          }else{
+            $setdata = PrHistoriGajiPokokPerClient::find($checkhistory2->id);
+            $setdata->id_client = $idclient;
+            $setdata->id_cabang_client = $key1;
+            $setdata->tanggal_penyesuaian = date('Y-m-d');
+            $setdata->nilai = $request->gaji_pokok;
+            $setdata->save();
+          }
+          
           // SAVE TO HISTORI GAJI POKOK PER CLIENT BY DUDY //
 
           $check = HrPkwt::where('id_cabang_client', $key1)->get();
