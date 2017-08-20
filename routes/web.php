@@ -95,6 +95,10 @@ Route::post('data-peringatan/create', 'DataPeringatanController@create')->name('
 Route::get('masterpegawai/hapusperingatan/{id}', 'DataPeringatanController@hapusPeringatan');
 Route::post('masterpegawai/editperingatan', 'DataPeringatanController@editPeringatan')->name('dataperingatan.update');
 Route::get('masterpegawai/bind-peringatan/{id}', 'DataPeringatanController@bindPeringatan');
+
+Route::get('pkwt-import', 'PkwtController@import')->name('pkwtImport');
+Route::get('pkwt-import/getTemplate', 'PkwtController@getTemplate')->name('pkwtGetTemplate');
+Route::post('pkwt-import', 'PkwtController@proses')->name('pkwtProses');
 //----- End PKWT -----//
 
 
