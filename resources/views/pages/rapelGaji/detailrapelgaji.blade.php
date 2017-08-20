@@ -11,7 +11,7 @@
   </h1>
   <ol class="breadcrumb">
     <li><a href="#"><i class="fa fa-dashboard"></i> Dashboard</a></li>
-    <li><a href="{{route('rapelgaji.list')}}"> List Rapel Gaji</a></li>
+    <li><a href="{{route('rapelgaji.view')}}"> List Rapel Gaji</a></li>
     <li class="active">Detail Rapel Gaji</li>
   </ol>
 @stop

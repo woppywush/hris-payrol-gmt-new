@@ -43,7 +43,7 @@ class SpvController extends Controller
                           ->join('master_jabatan as E', 'SPV.id_jabatan', '=', 'E.id')
                           ->select('master_client.nama_client', 'A.nama_cabang', 'C.nama as nama_karyawan', 'D.tanggal_awal_pkwt', 'D.tanggal_akhir_pkwt', 'E.nama_jabatan', 'SPV.nama as spv')
                           ->where('E.id', '999')
-                          ->where('c.status', 1)
+                          ->where('C.status', 1)
                           ->where('master_client.id',  $id_client)
                           ->where('D.status_pkwt', '1')
                           ->where('D.flag_terminate', '1')
