@@ -184,8 +184,10 @@ Route::get('komponen-gaji-tetap/delete/{id}', 'KomponenGajiTetapController@delet
 Route::get('komponen-gaji-tetap/bind-gaji-tetap/{id}', 'KomponenGajiTetapController@bind')->name('komgajitetap.bind');
 
 ///// KOMPONEN GAJI TETAP DETAIL CLIENT //////
-Route::get('komponen-gaji-tetap-client/{id}', 'KomponenGajiTetapClientController@index')->name('komgajitetapclient.index');
-Route::post('komponen-gaji-tetap-client', 'KomponenGajiTetapClientController@store')->name('komgajitetapclient.store');
+Route::get('komponen-gaji-tetap-client/{id}', 'KomponenGajiTetapClientController@index')
+		->name('komgajitetapclient.index');
+Route::post('komponen-gaji-tetap-client', 'KomponenGajiTetapClientController@store')
+		->name('komgajitetapclient.store');
 Route::post('komponen-gaji-tetap-client/update', 'KomponenGajiTetapClientController@update')
 		->name('komgajitetapclient.update');
 Route::get('komponen-gaji-tetap-client/bind-komponen-gaji-tetap-client/{id}', 'KomponenGajiTetapClientController@bind')
