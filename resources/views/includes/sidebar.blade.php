@@ -151,7 +151,7 @@
           <li class="{{ Route::currentRouteNamed('komgaji.index') ? 'active' : '' }}"><a href="{{route('komgaji.index')}}"><i class="fa fa-circle-o"></i> Gaji Variable</a></li>
         </ul>
       </li>
-      <li class="treeview {{ Route::is('hari.libur*') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('hari.libur*') ? 'active' : '' }}{{ Route::is('pengecualian.client*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-child"></i>
           <span>Manajemen Hari Libur</span>
@@ -160,6 +160,9 @@
         <ul class="treeview-menu">
           <li class="{{ Route::is('hari.libur*') ? 'active' : '' }}">
             <a href="{{route('hari.libur.index')}}"><i class="fa fa-circle-o"></i> Set Hari Libur</a>
+          </li>
+          <li class="{{ Route::is('pengecualian.client*') ? 'active' : '' }}">
+            <a href="{{ route('pengecualian.client.index') }}"><i class="fa fa-circle-o"></i> Set Pengecualian</a>
           </li>
         </ul>
       </li>
@@ -175,7 +178,7 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::is('pengecualian.client*') ? 'active' : '' }}">
+      {{-- <li class="treeview {{ Route::is('pengecualian.client*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-unlink"></i>
           <span>Pengecualian Hari Libur</span>
@@ -186,7 +189,7 @@
             <a href="{{ route('pengecualian.client.index') }}"><i class="fa fa-circle-o"></i> Set Pengecualian</a>
           </li>
         </ul>
-      </li>
+      </li> --}}
       <li class="treeview {{ Route::is('harikerja*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-user-secret"></i>

@@ -342,4 +342,9 @@ class BatchPayrollLaporanController extends Controller
         return response()->json(['success' => 200]);
 
     }
+
+    public function prosesSlipGaji()
+    {
+      return view('pages.laporanPayroll.slipGaji');
+    }
 }
