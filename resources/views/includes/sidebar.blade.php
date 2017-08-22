@@ -47,24 +47,28 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('masterjabatan.create') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('masterjabatan*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-briefcase"></i>
           <span>Master Jabatan</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('masterjabatan.create') ? 'active' : '' }}"><a href="{{ route('masterjabatan.create') }}"><i class="fa fa-circle-o"></i>Data Jabatan</a></li>
+          <li class="{{ Route::is('masterjabatan*') ? 'active' : '' }}">
+            <a href="{{ route('masterjabatan.create') }}"><i class="fa fa-circle-o"></i>Data Jabatan</a>
+          </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::currentRouteNamed('masterbank.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterbank.ubah') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('masterbank*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-bank"></i>
           <span>Master Bank</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::currentRouteNamed('masterbank.index') ? 'active' : '' }}{{ Route::currentRouteNamed('masterbank.ubah') ? 'active' : '' }}"><a href="{{ route('masterbank.index') }}"><i class="fa fa-circle-o"></i> Data Bank</a></li>
+          <li class="{{ Route::is('masterbank*') ? 'active' : '' }}">
+            <a href="{{ route('masterbank.index') }}"><i class="fa fa-circle-o"></i> Data Bank</a>
+          </li>
         </ul>
       </li>
       <li class="treeview {{ Route::is('masterclient.*') ? 'active' : '' }}{{ Route::is('clientcabang.*') ? 'active' : '' }}{{ Route::is('departemen.*') ? 'active' : '' }}">

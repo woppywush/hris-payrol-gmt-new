@@ -10,6 +10,7 @@ use App\Models\MasterJabatan;
 use App\Models\MasterBank;
 use App\Models\HrPkwt;
 
+use DB;
 use Excel;
 use PHPExcel_Worksheet_Drawing;
 use PHPExcel_Worksheet_PageSetup;
@@ -33,8 +34,8 @@ class ImportPegawaiController extends Controller
 
     public function getTemplate()
     {
-      $jabatan = MasterJabatan::select('nama_jabatan', 'id')->get()->toArray();
-      $nip     = MasterPegawai::select('nip', 'nama')->orderBy('id', 'DESC')->get()->toArray();
+      $jabatan = MasterJabatan::select('nama_jabatan', 'id')->where('status', 1)->get()->toArray();
+      $nip     = MasterPegawai::select('nip', 'nama')->orderBy('id', 'ASC')->limit(10)->get()->toArray();
       $bank    = MasterBank::select('id', 'nama_bank')->get()->toArray();
 
       return Excel::create('Template Import Data Pegawai', function($excel) use($jabatan, $nip, $bank)
@@ -42,7 +43,7 @@ class ImportPegawaiController extends Controller
         $excel->sheet('Data-Import', function($sheet)
         {
           $sheet->setOrientation('landscape');
-          $sheet->row(1, array('nip', 'nip_lama','no_ktp', 'no_kk', 'no_npwp', 'nama', 'tanggal_lahir', 'jenis_kelamin', 'email', 'alamat', 'agama', 'no_telp', 'status_pajak', 'kewarganegaraan', 'bpjs_kesehatan', 'bpjs_ketenagakerjaan', 'no_rekening', 'nama_darurat', 'alamat_darurat', 'hubungan_darurat', 'telepon_darurat', 'id_jabatan', 'id_bank'));
+          $sheet->row(1, array('nip', 'nip_lama','no_ktp', 'no_kk', 'no_npwp', 'nama', 'tanggal_lahir', 'jenis_kelamin', 'email', 'alamat', 'agama', 'no_telp', 'status_pajak', 'kewarganegaraan', 'bpjs_kesehatan', 'bpjs_ketenagakerjaan', 'nama_darurat', 'alamat_darurat', 'hubungan_darurat', 'telepon_darurat', 'id_jabatan', 'id_bank', 'no_rekening',));
           $sheet->setColumnFormat(array(
             'G' => 'yyyy-mm-dd',
             'C' => '@',

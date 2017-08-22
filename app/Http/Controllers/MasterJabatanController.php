@@ -22,7 +22,7 @@ class MasterJabatanController extends Controller
 
     public function create()
     {
-        $getjabatan = MasterJabatan::where('status', 1)->orderBy('kode_jabatan', 'ASC')->paginate(10);
+        $getjabatan = MasterJabatan::where('status', 1)->orderBy('nama_jabatan', 'ASC')->paginate(20);
 
         $getjabatan2 = MasterJabatan::get();
         $get = array();
@@ -40,6 +40,7 @@ class MasterJabatanController extends Controller
 
         $data['getjabatan'] = $getjabatan;
         $data['kodegenerate'] = $kodegenerate;
+
         return view('pages.masterjabatan.index')->with('data', $data);
     }
 
@@ -59,7 +60,7 @@ class MasterJabatanController extends Controller
 
         $jabatan = new MasterJabatan;
         $jabatan->kode_jabatan = $request->kode_jabatan;
-        $jabatan->nama_jabatan = $request->nama_jabatan;
+        $jabatan->nama_jabatan = strtoupper($request->nama_jabatan);
         $jabatan->status = 1;
         $jabatan->save();
 
@@ -68,7 +69,7 @@ class MasterJabatanController extends Controller
 
     public function edit($id)
     {
-        $getjabatan = MasterJabatan::where('status', 1)->paginate(10);
+        $getjabatan = MasterJabatan::where('status', 1)->orderBy('nama_jabatan', 'ASC')->paginate(20);
         $data['getjabatan'] = $getjabatan;
         $bindjabatan = MasterJabatan::find($id);
         $data['bindjabatan'] = $bindjabatan;
@@ -91,7 +92,7 @@ class MasterJabatanController extends Controller
 
         $newchanges = MasterJabatan::find($id);
         $newchanges->kode_jabatan = $request->kode_jabatan;
-        $newchanges->nama_jabatan = $request->nama_jabatan;
+        $newchanges->nama_jabatan = strtoupper($request->nama_jabatan);
         $newchanges->save();
 
         return redirect()->route('masterjabatan.create')->with('message', 'Data jabatan berhasil diubah.');
