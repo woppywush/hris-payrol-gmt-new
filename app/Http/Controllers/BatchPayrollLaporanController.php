@@ -140,13 +140,20 @@ class BatchPayrollLaporanController extends Controller
       $hasilQuery = DB::select($query1.$query2.$query3.$query4.$query5);
       $hasilQuery = collect($hasilQuery);
 
-      Excel::create('Proses Payroll Periode -'.$getbatch->tanggal_proses.' s-d '.$getbatch->tanggal_proses_akhir, function($excel) use($getkomponengaji,$getbatch,$hasilQuery,$getCabangClient) {
-          $excel->sheet('All Payroll', function($sheet) use($getkomponengaji,$getbatch,$hasilQuery,$getCabangClient) {
+      $totalkerjabulan = DB::select("SELECT id_pegawai, workday, SUM(workday - (abstain+sick_leave+permissed_leave)) as jumlah_kerja
+                                    FROM pr_batch_payroll_detail
+                                    WHERE id_batch_payroll = '$id'
+                                    GROUP BY id_pegawai");
+      $totalkerjabulan = collect($totalkerjabulan);
+
+      Excel::create('Proses Payroll Periode -'.$getbatch->tanggal_proses.' s-d '.$getbatch->tanggal_proses_akhir, function($excel) use($getkomponengaji,$getbatch,$hasilQuery,$totalkerjabulan,$getCabangClient) {
+          $excel->sheet('All Payroll', function($sheet) use($getkomponengaji,$getbatch,$hasilQuery,$totalkerjabulan,$getCabangClient) {
             $sheet->loadView('pages.laporanPayroll.allProses')
                     ->with('getkomponengaji', $getkomponengaji)
                     ->with('getbatch', $getbatch)
                     ->with('getCabangClient', $getCabangClient)
-                    ->with('hasilQuery', $hasilQuery);
+                    ->with('hasilQuery', $hasilQuery)
+                    ->with('totalkerjabulan', $totalkerjabulan);
           });
       })->download('xlsx');
 
@@ -185,10 +192,30 @@ class BatchPayrollLaporanController extends Controller
       $hasilQuery = DB::select($query1.$query2.$query3.$query4);
       $hasilQuery = collect($hasilQuery);
 
+      $totalkerjabulan = DB::select("SELECT id_pegawai, workday, SUM(workday - (abstain+sick_leave+permissed_leave)) as jumlah_kerja
+                                    FROM pr_batch_payroll_detail
+                                    WHERE id_batch_payroll = '$id'
+                                    GROUP BY id_pegawai");
+      $totalkerjabulan = collect($totalkerjabulan);
+
       $nilaiTransfer = array();
       foreach($hasilQuery as $key)
       {
-        $jumlahGajinya = $key->Jumlah_GAJI_POKOK + $key->Jumlah_TUNJANGAN_JABATAN + $key->Jumlah_TUNJANGAN_INSENTIF + $key->Jumlah_TUNJANGAN_LEMBUR + $key->Jumlah_KEKURANGAN_BULAN_LALU + $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN + $key->Jumlah_KETUA_REGU + $key->Jumlah_PENGEMBALIAN_SERAGAM + $key->Jumlah_TUNJANGAN_MAKAN_LEMBUR + $key->Jumlah_SALARY + $key->Jumlah_SHIFT_PAGI_SIANG + $key->Jumlah_TUNJANGAN_MAKAN_TRANSPORT;
+        foreach ($totalkerjabulan as $totalkerja){
+          if ($totalkerja->id_pegawai == $key->id){
+            $hasilgajihari = $key->Jumlah_GAJI_POKOK / $totalkerja->workday;
+            $hasilgajihari = round($hasilgajihari);
+            $dapatgaji = $hasilgajihari * $totalkerja->jumlah_kerja;
+          }
+        }
+
+        foreach ($totalkerjabulan as $totalkerja){
+          if ($totalkerja->id_pegawai == $key->id){
+              $transportmakan = $totalkerja->jumlah_kerja * $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN;
+          }
+        }
+
+        $jumlahGajinya = $dapatgaji + $key->Jumlah_TUNJANGAN_JABATAN + $key->Jumlah_TUNJANGAN_INSENTIF + $key->Jumlah_TUNJANGAN_LEMBUR + $key->Jumlah_KEKURANGAN_BULAN_LALU + $transportmakan + $key->Jumlah_KETUA_REGU + $key->Jumlah_PENGEMBALIAN_SERAGAM + $key->Jumlah_TUNJANGAN_MAKAN_LEMBUR + $key->Jumlah_SALARY + $key->Jumlah_SHIFT_PAGI_SIANG + $key->Jumlah_TUNJANGAN_MAKAN_TRANSPORT;
 
         $jumlahPotongannya = $key->Jumlah_BPJS_KESEHATAN + $key->Jumlah_POTONGAN_KAS + $key->Jumlah_BPJS_KETENAGAKERJAAN + $key->Jumlah_POTONGAN_PINJAMAN + $key->Jumlah_POTONGAN_SERAGAM + $key->Jumlah_POTONGAN_CONSUMABLE + $key->Jumlah_BPJS_PENSIUN;
 
@@ -257,6 +284,12 @@ class BatchPayrollLaporanController extends Controller
         $hasilQuery = DB::select($query1.$query2.$query3.$query4.$query5);
         $hasilQuery = collect($hasilQuery);
 
+        $totalkerjabulan = DB::select("SELECT id_pegawai, workday, SUM(workday - (abstain+sick_leave+permissed_leave)) as jumlah_kerja
+                                      FROM pr_batch_payroll_detail
+                                      WHERE id_batch_payroll = '$id'
+                                      GROUP BY id_pegawai");
+        $totalkerjabulan = collect($totalkerjabulan);
+
         $nilaiClient = array();
         foreach ($getCabangClient as $client)
         {
@@ -292,13 +325,27 @@ class BatchPayrollLaporanController extends Controller
           {
             if($key->Cabang == $client->id)
             {
+              foreach ($totalkerjabulan as $totalkerja){
+                if ($totalkerja->id_pegawai == $key->id){
+                  $hasilgajihari = $key->Jumlah_GAJI_POKOK / $totalkerja->workday;
+                  $hasilgajihari = round($hasilgajihari);
+                  $dapatgaji = $hasilgajihari * $totalkerja->jumlah_kerja;
+                }
+              }
+
+              foreach ($totalkerjabulan as $totalkerja){
+                if ($totalkerja->id_pegawai == $key->id){
+                    $transportmakan = $totalkerja->jumlah_kerja * $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN;
+                }
+              }
+
               $Jumlah_Workday += $key->Jumlah_Workday;
-              $Jumlah_GAJI_POKOK += $key->Jumlah_GAJI_POKOK;
+              $Jumlah_GAJI_POKOK += $dapatgaji;
               $Jumlah_TUNJANGAN_JABATAN += $key->Jumlah_TUNJANGAN_JABATAN;
               $Jumlah_TUNJANGAN_INSENTIF += $key->Jumlah_TUNJANGAN_INSENTIF;
               $Jumlah_TUNJANGAN_LEMBUR += $key->Jumlah_TUNJANGAN_LEMBUR;
               $Jumlah_KEKURANGAN_BULAN_LALU += $key->Jumlah_KEKURANGAN_BULAN_LALU;
-              $Jumlah_TUNJANGAN_TRANSPORT_MAKAN += $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN;
+              $Jumlah_TUNJANGAN_TRANSPORT_MAKAN += $transportmakan;
               $Jumlah_KETUA_REGU += $key->Jumlah_KETUA_REGU;
               $Jumlah_PENGEMBALIAN_SERAGAM += $key->Jumlah_PENGEMBALIAN_SERAGAM;
               $Jumlah_TUNJANGAN_MAKAN_LEMBUR += $key->Jumlah_TUNJANGAN_MAKAN_LEMBUR;
@@ -306,7 +353,7 @@ class BatchPayrollLaporanController extends Controller
               $Jumlah_SHIFT_PAGI_SIANG += $key->Jumlah_SHIFT_PAGI_SIANG;
               $Jumlah_TUNJANGAN_MAKAN_TRANSPORT += $key->Jumlah_TUNJANGAN_MAKAN_TRANSPORT;
 
-              $jumlahGajinya = $key->Jumlah_GAJI_POKOK + $key->Jumlah_TUNJANGAN_JABATAN + $key->Jumlah_TUNJANGAN_INSENTIF + $key->Jumlah_TUNJANGAN_LEMBUR + $key->Jumlah_KEKURANGAN_BULAN_LALU + $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN + $key->Jumlah_KETUA_REGU + $key->Jumlah_PENGEMBALIAN_SERAGAM + $key->Jumlah_TUNJANGAN_MAKAN_LEMBUR + $key->Jumlah_SALARY + $key->Jumlah_SHIFT_PAGI_SIANG + $key->Jumlah_TUNJANGAN_MAKAN_TRANSPORT;
+              $jumlahGajinya = $dapatgaji + $key->Jumlah_TUNJANGAN_JABATAN + $key->Jumlah_TUNJANGAN_INSENTIF + $key->Jumlah_TUNJANGAN_LEMBUR + $key->Jumlah_KEKURANGAN_BULAN_LALU + $transportmakan + $key->Jumlah_KETUA_REGU + $key->Jumlah_PENGEMBALIAN_SERAGAM + $key->Jumlah_TUNJANGAN_MAKAN_LEMBUR + $key->Jumlah_SALARY + $key->Jumlah_SHIFT_PAGI_SIANG + $key->Jumlah_TUNJANGAN_MAKAN_TRANSPORT;
 
               $grandJumlahGaji += $jumlahGajinya;
 
