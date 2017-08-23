@@ -119,7 +119,9 @@
         </a>
         <ul class="treeview-menu">
           <li class="{{ Route::is('laporanpegawai*') ? 'active' : '' }}">
-            <a href="{{ route('laporanpegawai.index') }}"><i class="fa fa-circle-o"></i> Laporan Pegawai</a></li>
+            <a href="{{ route('laporanpegawai.index') }}"><i class="fa fa-circle-o"></i> Laporan Pegawai Aktif</a></li>
+        <li class="{{ Route::is('laporanpegawairesign*') ? 'active' : '' }}">
+            <a href="{{ route('laporanpegawairesign.index') }}"><i class="fa fa-circle-o"></i> Laporan Pegawai Resign</a></li>
         </ul>
       </li>
     @endif

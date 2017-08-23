@@ -126,6 +126,14 @@ Route::get('report/{kode_client}/{token}', 'LaporanPegawaiController@reportforcl
 //----- End Laporan -----//
 
 
+//----- Start Laporan Resign-----//
+Route::get('laporan-pegawai-resign', 'LaporanPegawaiResignController@index')->name('laporanpegawairesign.index');
+Route::post('laporan-pegawai-resign', 'LaporanPegawaiResignController@proses')->name('laporanpegawairesign.proses');
+Route::get('laporan-pegawai-resign/cetak/{id}', 'LaporanPegawaiResignController@downloadExcel')->name('laporanpegawairesign.cetak');
+Route::get('report-resign/{kode_client}/{token}', 'LaporanPegawaiResignController@reportforclient')->name('reportforclient');
+//----- End Laporan Resign-----//
+
+
 //----- Start Master Client -----//
 Route::get('masterclient', 'MasterClientController@index')->name('masterclient.index');
 Route::get('masterclient/create', 'MasterClientController@create')->name('masterclient.tambah');

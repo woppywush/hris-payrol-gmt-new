@@ -279,10 +279,19 @@ class PkwtController extends Controller
 
     public function getTemplate()
     {
-      $pegawai = MasterPegawai::select('nip', 'nama', 'jenis_kelamin')
-                                ->where('status', 1)
-                                ->get()
-                                ->toArray();
+      // $pegawai = MasterPegawai::select('nip', 'nama', 'jenis_kelamin')
+      //                           ->where('status', 1)
+      //                           ->get()
+      //                           ->toArray();
+      $pegawai = HrPkwt::join('master_pegawai', 'master_pegawai.id', '=', 'hr_pkwt.id_pegawai')
+                      ->join('master_client_cabang', 'master_client_cabang.id', '=', 'hr_pkwt.id_cabang_client')
+                      ->join('master_client', 'master_client.id', '=', 'master_client_cabang.id_client')
+                      ->select('master_pegawai.nip', 'master_pegawai.nama', 'master_pegawai.jenis_kelamin', 'master_client.nama_client','master_client_cabang.nama_cabang')
+                      ->where('master_pegawai.status', 1)
+                      ->where('hr_pkwt.status_pkwt', 1)
+                      ->get()
+                      ->toArray();
+
 
       $supervisi = MasterPegawai::select('nip as nip_spv', 'nama', 'jenis_kelamin')
                                 ->where('id_jabatan', '=', '999')
@@ -316,19 +325,19 @@ class PkwtController extends Controller
         $excel->sheet('pegawai', function($sheet) use($pegawai)
         {
           $sheet->row(1, array('Untuk Import Data PKWT Gunakan NIP'));
-          $sheet->mergeCells('A1:C1');
-          $sheet->cells('A1:C1', function($cells){
+          $sheet->mergeCells('A1:E1');
+          $sheet->cells('A1:E1', function($cells){
             $cells->setBackground('#000000');
             $cells->setFontColor('#ffffff');
             $cells->setFontWeight('bold');
             $cells->setFontSize(16);
           });
           $sheet->fromArray($pegawai, null, 'A2', true);
-          $sheet->row(2, array('nip','nama', 'jenis_kelamin'));
+          $sheet->row(2, array('nip', 'nama', 'jenis_kelamin', 'nama_client','nama_cabang'));
           $sheet->setAllBorders('thin');
           $sheet->setFreeze('A1');
 
-          $sheet->cells('A2:C2', function($cells){
+          $sheet->cells('A2:E2', function($cells){
             $cells->setBackground('#000000');
             $cells->setFontColor('#ffffff');
             $cells->setFontWeight('bold');

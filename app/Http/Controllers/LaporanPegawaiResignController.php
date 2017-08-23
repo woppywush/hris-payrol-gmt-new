@@ -11,7 +11,7 @@ use App\Models\HrPkwt;
 use Excel;
 
 
-class LaporanPegawaiController extends Controller
+class LaporanPegawaiResignController extends Controller
 {
     /**
     * Authentication controller.
@@ -27,12 +27,11 @@ class LaporanPegawaiController extends Controller
     {
       $getClient  = MasterClient::get();
 
-      return view('pages.laporan.laporanpegawai', compact('getClient'));
+      return view('pages.laporan.laporanpegawairesign', compact('getClient'));
     }
 
     public function proses(Request $request)
     {
-
       $idClient = $request->id_client;
       $getClient  = MasterClient::get();
 
@@ -44,13 +43,14 @@ class LaporanPegawaiController extends Controller
                       ->join('master_jabatan', 'master_jabatan.id', '=', 'master_pegawai.id_jabatan')
                       ->select('hr_pkwt.tanggal_masuk_gmt', 'hr_pkwt.tanggal_masuk_client', 'master_pegawai.nip', 'master_pegawai.no_rekening', 'master_pegawai.nama', 'master_client.nama_client', 'master_client.kode_client', 'master_client.token', 'master_client_cabang.nama_cabang','master_jabatan.nama_jabatan', 'master_pegawai.no_ktp', 'master_pegawai.tanggal_lahir', 'master_pegawai.no_kk', 'master_pegawai.alamat', 'master_pegawai.no_telp', 'master_pegawai.jenis_kelamin', 'spv.nama as spv')
                       ->where('master_client.id', $idClient)
-                      ->where('hr_pkwt.status_pkwt', '=', 1)
+                      ->where('master_pegawai.status', '=', 0)
+                      ->where('hr_pkwt.status_pkwt', '=', 0)
                       ->where('hr_pkwt.tanggal_akhir_pkwt', '>', $sysDate)
                       ->orderBy('spv.nama')
                       ->orderBy('hr_pkwt.tanggal_masuk_gmt', 'ASC')
                       ->paginate(10);
 
-      return view('pages.laporan.laporanpegawai', compact('getClient', 'idClient', 'proses'));
+      return view('pages.laporan.laporanpegawairesign', compact('getClient', 'idClient', 'proses'));
     }
 
     public function downloadExcel($id)
@@ -66,7 +66,8 @@ class LaporanPegawaiController extends Controller
                       ->join('master_jabatan', 'master_jabatan.id', '=', 'master_pegawai.id_jabatan')
                       ->select('master_pegawai.nip', 'master_pegawai.no_rekening', 'master_pegawai.nama', 'master_client_cabang.nama_cabang', 'spv.nama as spv', 'master_jabatan.nama_jabatan', 'master_pegawai.no_ktp', 'master_pegawai.tanggal_lahir', 'master_pegawai.no_kk', 'master_pegawai.alamat', 'master_pegawai.no_telp', 'master_pegawai.jenis_kelamin', 'master_pegawai.bpjs_kesehatan', 'master_pegawai.bpjs_ketenagakerjaan', 'hr_pkwt.tanggal_masuk_gmt', 'hr_pkwt.tanggal_masuk_client')
                       ->where('master_client.id', $idClient)
-                      ->where('hr_pkwt.status_pkwt', '=', 1)
+                      ->where('master_pegawai.status', '=', 0)
+                      ->where('hr_pkwt.status_pkwt', '=', 0)
                       ->where('hr_pkwt.tanggal_akhir_pkwt', '>', $sysDate)
                       ->orderBy('spv.nama')
                       ->orderBy('hr_pkwt.tanggal_masuk_gmt', 'ASC')
@@ -83,16 +84,16 @@ class LaporanPegawaiController extends Controller
         $excel->sheet('Data Pegawai', function($sheet) use ($proses)
         {
           $sheet->fromArray($proses, null, 'A3', true);
-          $sheet->mergeCells('A1:P2');
+          $sheet->mergeCells('A1:N2');
           $sheet->row(1, array('PT. GANDA MADY INDOTAMA - Data Personnel Pegawai Yang Masih Aktif'));
           $sheet->row(3, array('NIP','No Rekening','Nama','Departemen', 'Kelompok Jabatan', 'Jabatan', 'No KTP', 'Tanggal Lahir', 'No KK', 'Alamat', 'No Tlp', 'Jenis Kelamin', 'BPJS Kesehatan', 'BPJS Ketenagakerjaan', 'Tanggal Masuk GMT', 'Tanggal Masuk Client'));
-          $sheet->cell('A1:P3', function($cell){
+          $sheet->cell('A1:N3', function($cell){
             $cell->setFontSize(12);
             $cell->setFontWeight('bold');
             $cell->setAlignment('center');
             $cell->setValignment('center');
           });
-          $sheet->setAutoFilter('A3:P3');
+          $sheet->setAutoFilter('A3:N3');
           $sheet->setAllBorders('thin');
           $sheet->setFreeze('A4');
         });
@@ -101,7 +102,7 @@ class LaporanPegawaiController extends Controller
 
     public function reportforclient($kode_client, $token)
     {
-     
+
       $cekToken = MasterClient::where('token', $token)->where('kode_client', $kode_client)->first();
 
       if($cekToken == null)
@@ -121,7 +122,8 @@ class LaporanPegawaiController extends Controller
                       ->join('master_jabatan', 'master_jabatan.id', '=', 'master_pegawai.id_jabatan')
                       ->select('hr_pkwt.tanggal_masuk_gmt', 'hr_pkwt.tanggal_masuk_client', 'master_pegawai.nip', 'master_pegawai.no_rekening', 'master_pegawai.nama', 'master_client.nama_client', 'master_client_cabang.nama_cabang','master_jabatan.nama_jabatan', 'master_pegawai.no_ktp', 'master_pegawai.tanggal_lahir', 'master_pegawai.no_kk', 'master_pegawai.alamat', 'master_pegawai.no_telp', 'master_pegawai.jenis_kelamin', 'spv.nama as spv')
                       ->where('master_client.id', $idClient[0]->id)
-                      ->where('hr_pkwt.status_pkwt', '=', 1)
+                      ->where('master_pegawai.status', '=', 0)
+                      ->where('hr_pkwt.status_pkwt', '=', 0)
                       ->where('hr_pkwt.tanggal_akhir_pkwt', '>', $sysDate)
                       ->orderBy('spv.nama')
                       ->orderBy('hr_pkwt.tanggal_masuk_gmt', 'ASC')

@@ -9,11 +9,11 @@
 @section('breadcrumb')
   <h1>
     Laporan
-    <small>Data Pegawai Aktif</small>
+    <small>Data Pegawai Yang Telah Resign</small>
   </h1>
   <ol class="breadcrumb">
     <li><a href="{{ url('dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
-    <li class="active">Laporan Pegawai Aktif</li>
+    <li class="active">Laporan Pegawai Yang Telah Resign</li>
   </ol>
 @stop
 
@@ -29,7 +29,7 @@
           <div class="col-md-12" style="margin-bottom:20px;">
           </div>
           <div class="col-md-12">
-               <form class="form-horizontal" method="post" action="{{ route('laporanpegawai.proses') }}">
+               <form class="form-horizontal" method="post" action="{{ route('laporanpegawairesign.proses') }}">
                 {!! csrf_field() !!}
                 <div class="callout callout-warning">
                   <label class="col-sm-2 control-label">Client</label>
@@ -54,7 +54,7 @@
           <div class="box box-primary box-solid">
             <div class="box-header">
               <div class="pull-left">
-                <button type="button" class="btn btn-round bg-blue" data-clipboard-text="{{ url('report').'/'.$proses[0]->kode_client.'/'.$proses[0]->token }}">Copy Url</button>
+                <button type="button" class="btn btn-round bg-blue" data-clipboard-text="{{ url('report-resign').'/'.$proses[0]->kode_client.'/'.$proses[0]->token }}">Copy Url</button>
               </div>
               <div class="btn-group pull-right">
                 <button type="button" class="btn btn-round bg-red">Download</button>
@@ -63,7 +63,7 @@
                   <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
-                  <li><a style="color: black" href="{{ route('laporanpegawai.cetak', ['id' => $idClient]) }}">Excel</a></li>
+                  <li><a style="color: black" href="{{ route('laporanpegawairesign.cetak', ['id' => $idClient]) }}">Excel</a></li>
                 </ul>
               </div>
             </div>

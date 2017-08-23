@@ -68,6 +68,7 @@
               <tr>
                 <th>NIP</th>
                 <th>NIP Lama</th>
+                <th>No KTP</th>
                 <th>Nama</th>
                 <th>Jabatan</th>
                 <th>Status</th>
@@ -100,10 +101,11 @@
               {data: 'id', name: 'id'},
               {data: '0', name: 'nip'},
               {data: '1', name: 'nip_lama'},
-              {data: '2', name: 'name'},
-              {data: '3', name: 'nama_jabatan'},
-              {data: '5', name: 'status'},
-              {data: '6', name: 'action', orderable: false, searchable: false}
+              {data: '2', name: 'no_ktp'},
+              {data: '3', name: 'name'},
+              {data: '4', name: 'nama_jabatan'},
+              {data: '6', name: 'status'},
+              {data: '7', name: 'action', orderable: false, searchable: false}
             ]
         });
 
