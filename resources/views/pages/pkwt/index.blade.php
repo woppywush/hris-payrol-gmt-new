@@ -17,7 +17,40 @@
 @stop
 
 @section('content')
+  <script>
+    window.setTimeout(function() {
+      $(".alert-success").fadeTo(500, 0).slideUp(500, function(){
+          $(this).remove();
+      });
+    }, 1500);
+  </script>
+  <script>
+    window.setTimeout(function() {
+      $(".alert-warning").fadeTo(500, 0).slideUp(500, function(){
+          $(this).remove();
+      });
+    }, 1500);
+  </script>
+
   <div class="row">
+    @if(Session('messagefail'))
+    <div class="col-md-12">
+      <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4><i class="icon fa fa-check"></i> Gagal!</h4>
+        <p>{{ Session::get('messagefail') }}</p>
+      </div>
+    </div>
+    @endif
+    @if (session('message'))
+    <div class="col-md-12">
+      <div class="alert alert-success">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <h4>  <i class="icon fa fa-check"></i> Sukses!</h4>
+        {{ session('message') }}
+      </div>
+    </div>
+    @endif  
     <div class="col-md-12">
       <div class="box box-primary box-solid">
         <div class="box-header">

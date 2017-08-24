@@ -398,7 +398,7 @@
             }
             else if(status_karyawan_pkwt==3)
             {
-              $('#status_karyawan_freelance').attr('selected', true);
+              $('#status_karyawan_tetap').attr('selected', true);
             }
           }
         });

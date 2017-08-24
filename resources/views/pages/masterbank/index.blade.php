@@ -55,26 +55,17 @@
     <div class="col-md-12">
       <div class="alert alert-warning">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h4><i class="icon fa fa-check"></i> Berhasil!</h4>
+        <h4><i class="icon fa fa-check"></i> Gagal!</h4>
         <p>{{ Session::get('messagefail') }}</p>
       </div>
     </div>
     @endif
-    @if (session('tambah'))
+    @if (session('berhasil'))
     <div class="col-md-12">
       <div class="alert alert-success">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
         <h4>	<i class="icon fa fa-check"></i> Sukses!</h4>
-        {{ session('tambah') }}
-      </div>
-    </div>
-    @endif
-    @if (session('ubah'))
-    <div class="col-md-12">
-      <div class="alert alert-success">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h4>	<i class="icon fa fa-check"></i> Sukses!</h4>
-        {{ session('ubah') }}
+        {{ session('berhasil') }}
       </div>
     </div>
     @endif

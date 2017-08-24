@@ -125,6 +125,31 @@ class PkwtController extends Controller
   		}
 
 
+      $sysDate = date('Y-m-d');
+      $check = HrPkwt::where('id_pegawai', $request->id_pegawai)
+                      ->where('hr_pkwt.status_pkwt', '=', 1)
+                      ->where('hr_pkwt.tanggal_akhir_pkwt', '>', $sysDate)
+                      ->first();
+      // dd($check);
+      if($check==null) {
+        $set = new HrPkwt;
+        $set->tanggal_masuk_gmt = $request->tanggal_masuk_gmt;
+        $set->tanggal_masuk_client = $request->tanggal_masuk_client;
+        $set->status_pkwt = $request->status_pkwt;
+        $set->tanggal_awal_pkwt = $request->tanggal_awal_pkwt;
+        $set->tanggal_akhir_pkwt = $request->tanggal_akhir_pkwt;
+        $set->status_karyawan_pkwt = $request->status_karyawan_pkwt;
+        $set->id_pegawai = $request->id_pegawai;
+        $set->id_kelompok_jabatan = $request->id_kelompok_jabatan;
+        $set->id_cabang_client = $request->id_cabang_client;
+        $set->flag_terminate = '1';
+        $set->save();
+
+        return redirect()->route('pkwt.index')->with('message', 'Berhasil menambahkan data pkwt.');
+      } else {
+        return redirect()->route('pkwt.index')->with('messagefail', 'menambahkan data pkwt. Data pkwt tersebut telah memiliki pkwt aktif.');
+      }
+
       $set = new HrPkwt;
       $set->tanggal_masuk_gmt = $request->tanggal_masuk_gmt;
       $set->tanggal_masuk_client = $request->tanggal_masuk_client;
@@ -210,34 +235,31 @@ class PkwtController extends Controller
 
     public function saveChangesPKWT(Request $request)
     {
-      $message = [
-        'tanggal_masuk_gmt.required' => 'Wajib di isi',
-        'tanggal_masuk_client.required' => 'Wajib di isi',
-        'status_pkwt.required' => 'Wajib di isi',
-        'tanggal_awal_pkwt.required' => 'Wajib di isi',
-        'tanggal_akhir_pkwt.required' => 'Wajib di isi',
-        'status_karyawan_pkwt.required' => 'Wajib di isi',
-        'id_pegawai.required' => 'Wajib di isi',
-        'id_kelompok_jabatan.required' => 'Wajib di isi',
-        'id_cabang_client.required' => 'Wajib di isi',
-  		];
+      
+    //   $message = [
+    //     'tanggal_masuk_gmt.required' => 'Wajib di isi',
+    //     'tanggal_masuk_client.required' => 'Wajib di isi',
+    //     'tanggal_awal_pkwt.required' => 'Wajib di isi',
+    //     'tanggal_akhir_pkwt.required' => 'Wajib di isi',
+    //     'id_pegawai.required' => 'Wajib di isi',
+    //     'id_kelompok_jabatan.required' => 'Wajib di isi',
+    //     'id_cabang_client.required' => 'Wajib di isi',
+  		// ];
 
-  		$validator = Validator::make($request->all(), [
-  			'tanggal_masuk_gmt' => 'required',
-  			'tanggal_masuk_client' => 'required',
-        'status_pkwt' => 'required',
-        'tanggal_awal_pkwt' => 'required',
-        'tanggal_akhir_pkwt' => 'required',
-        'status_karyawan_pkwt' => 'required',
-        'id_pegawai' => 'required',
-        'id_kelompok_jabatan' => 'required',
-  			'id_cabang_client' => 'required',
-  		], $message);
+  		// $validator = Validator::make($request->all(), [
+  		// 	'tanggal_masuk_gmt' => 'required',
+  		// 	'tanggal_masuk_client' => 'required',
+    //     'tanggal_awal_pkwt' => 'required',
+    //     'tanggal_akhir_pkwt' => 'required',
+    //     'id_pegawai' => 'required',
+    //     'id_kelompok_jabatan' => 'required',
+  		// 	'id_cabang_client' => 'required',
+  		// ], $message);
 
-  		if($validator->fails()){
-  			return redirect()->route('pkwt.detail', ['id' => $request->nip])->withErrors($validator)->withInput()->with('gagal');
-  		}
-
+  		// if($validator->fails()){
+  		// 	return redirect()->route('pkwt.detail', ['id' => $request->nip])->withErrors($validator)->withInput()->with('gagal');
+  		// }
+      // dd($request);
       $set = HrPkwt::find($request->id_pkwt_change);
       $set->tanggal_masuk_gmt = $request->tanggal_masuk_gmt;
       $set->tanggal_masuk_client = $request->tanggal_masuk_client;

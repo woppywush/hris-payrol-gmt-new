@@ -719,6 +719,23 @@ class MasterPegawaiController extends Controller
       if ($set->status=='1') {
         $set->status = '0';
         $set->save();
+
+        $checkpeg = HrPkwt::where('id_pegawai', $id)->first();
+        if ($checkpeg != null) {
+          $datapeg = HrPkwt::where('id_pegawai', $id)->get();
+          // dd($datapeg);
+          foreach ($datapeg as $key) {
+            $dataChage = HrPkwt::where('id_pegawai', $key->id_pegawai)->first();
+            if ($dataChage->flag_terminate == "1") {
+                $setHistori = new HrHistoriPegawai;
+                $setHistori->keterangan = "PKWT ini telah di-Terminate dengan alasan : Data pegawai ini telah dinonaktifkan";
+                $setHistori->id_pegawai = $key->id_pegawai;
+                $setHistori->save();
+            } 
+            $dataChage->flag_terminate = "0";
+            $dataChage->save();
+          }
+        } 
       } else {
         $set->status = '1';
         $set->save();
