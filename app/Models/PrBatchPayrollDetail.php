@@ -8,7 +8,7 @@ class PrBatchPayrollDetail extends Model
 {
     protected $table = 'pr_batch_payroll_detail';
 
-    protected $fillable = ['id_batch_payroll','id_pegawai','workday','abstain','sick_leave','permissed_leave'];
+    protected $fillable = ['id_batch_payroll','id_pegawai','workday','abstain','sick_leave','permissed_leave', 'tipe_pembayaran'];
 
     public function pegawai()
     {

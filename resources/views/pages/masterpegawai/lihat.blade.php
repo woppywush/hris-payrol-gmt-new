@@ -2040,34 +2040,21 @@
                   <input type="hidden" name="id_pegawai" class="form-control" value="{{$pegawai->id}}">
                 </td>
               </tr>
-              <tr>
-                <td>Jabatan</td>
+               <tr>
+                <td>Jam Training</td>
                 <td>:</td>
-                <td id="tdlabeljabatan"><b data-value="{{$pegawai->nama_jabatan}}" id="valjabatan">{{ $pegawai->nama_jabatan}}</b></td>
-                <td id="tdtextjabatan" class="{{ $errors->has('jabatan') ? 'has-error' : '' }}">
-                  <select class="form-control" name="jabatan">
-                    <option value="-- Pilih --">-- Pilih --</option>
-                    @if(count($errors)>0)
-                      @foreach($DataJabatan as $key)
-                        @if(old('jabatan')==$key->id)
-                          <option value="{{$key->id}}" selected>{{$key->nama_jabatan}}</option>
-                        @else
-                          <option value="{{$key->id}}">{{$key->nama_jabatan}}</option>
-                        @endif
-                      @endforeach
+                <td id="tdlabeljamtraining"><b>{{ $pegawai->jam_training}}</b></td>
+                <td id="tdtextjamtraining" class="{{ $errors->has('jam_training') ? 'has-error' : '' }}">
+                  <input type="text" name="jam_training" class="form-control"
+                    @if($errors->has('jam_training'))
+                      value="{{old('jam_training')}}"
                     @else
-                      @foreach($DataJabatan as $key)
-                        @if($pegawai->nama_jabatan==$key->nama_jabatan)
-                          <option value="{{$key->id}}" selected>{{$key->nama_jabatan}}</option>
-                        @else
-                          <option value="{{$key->id}}">{{$key->nama_jabatan}}</option>
-                        @endif
-                      @endforeach
+                      value="{{$pegawai->jam_training}}"
                     @endif
-                  </select>
-                  @if($errors->has('jabatan'))
+                  >
+                  @if($errors->has('jam_training'))
                    <span class="help-block">
-                     <strong>{{ $errors->first('jabatan')}}
+                     <strong>{{ $errors->first('jam_training')}}
                      </strong>
                    </span>
                   @endif
@@ -3262,6 +3249,7 @@
         $('#tdlabelbpjskerja').hide();
         $('#tdlabelbpjssehat').hide();
         $('#tdlabelrekening').hide();
+        $('#tdlabeljamtraining').hide();
         $('#tdlabelwarga').hide();
         $('#tdlabelbank').hide();
         $('#tdlabeljabatan').hide();
@@ -3282,6 +3270,7 @@
         $('#tdtextbpjskerja').show();
         $('#tdtextbpjssehat').show();
         $('#tdtextrekening').show();
+        $('#tdtextjamtraining').show();
         $('#tdtextwarga').show();
         $('#tdtextbank').show();
         $('#tdtextjabatan').show();
@@ -3301,6 +3290,7 @@
         $('#tdtextbpjskerja').hide();
         $('#tdtextbpjssehat').hide();
         $('#tdtextrekening').hide();
+        $('#tdtextjamtraining').hide();
         $('#tdtextwarga').hide();
         $('#tdtextbank').hide();
         $('#tdtextjabatan').hide();
@@ -3323,6 +3313,7 @@
         $('#tdlabelbpjskerja').hide();
         $('#tdlabelbpjssehat').hide();
         $('#tdlabelrekening').hide();
+        $('#tdlabeljamtraining').hide();
         $('#tdlabelwarga').hide();
         $('#tdlabelbank').hide();
         $('#tdlabeljabatan').hide();
@@ -3343,6 +3334,7 @@
         $('#tdtextbpjskerja').show();
         $('#tdtextbpjssehat').show();
         $('#tdtextrekening').show();
+        $('#tdtextjamtraining').show();
         $('#tdtextwarga').show();
         $('#tdtextbank').show();
         $('#tdtextjabatan').show();

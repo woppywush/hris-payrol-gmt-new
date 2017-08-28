@@ -9,6 +9,7 @@ use Auth;
 use Image;
 use Datatables;
 use Validator;
+use Carbon\Carbon;
 
 use App\Models\MasterPegawai;
 use App\Models\MasterBank;
@@ -137,6 +138,8 @@ class MasterPegawaiController extends Controller
           'id_jabatan'     => $request->jabatan,
           'id_bank' => $request->bank,
           'status'  => 1,
+          'jam_training' => $request->jam_training,
+          'tanggal_training' => Carbon::now()->toDateTimeString(),
         ]);
 
         $kondisi_kesehatan = HrKondisiKesehatan::create([
@@ -342,6 +345,7 @@ class MasterPegawaiController extends Controller
       $pegawai->no_rekening = $request->rekening;
       $pegawai->id_jabatan = $request->jabatan;
       $pegawai->id_bank = $request->bank;
+      $pegawai->jam_training = $request->jam_training;
       $pegawai->save();
 
       return redirect()->route('masterpegawai.show', $request->id_pegawai)->with('message','Berhasil mengubah data pegawai.');

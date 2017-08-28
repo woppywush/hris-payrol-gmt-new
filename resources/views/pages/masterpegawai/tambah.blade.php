@@ -173,6 +173,18 @@
                     @endif
                   </div>
                 </div>
+                <div class="form-group {{ $errors->has('jam_training') ? 'has-error' : '' }}">
+                  <label class="col-sm-3 control-label">Jam Training</label>
+                  <div class="col-sm-9">
+                    {!! Form::text('jam_training', null, ['class'=>'form-control', 'placeholder'=>'Jam Training']) !!}
+                    @if($errors->has('jam_training'))
+                      <span class="help-block">
+                        <strong>{{ $errors->first('jam_training')}}
+                        </strong>
+                      </span>
+                    @endif
+                  </div>
+                </div>
               </div>
           </div>
         </div>
