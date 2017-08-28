@@ -111,17 +111,19 @@
           </li>
         </ul>
       </li>
-      <li class="treeview {{ Route::is('laporanpegawai*') ? 'active' : '' }}">
+      <li class="treeview {{ Route::is('laporanpegawai*') ? 'active' : '' }}{{ Route::is('laporanpegawairesign*') ? 'active' : '' }}">
         <a href="#">
           <i class="fa fa-file-text-o"></i>
           <span>Laporan</span>
           <i class="fa fa-angle-left pull-right"></i>
         </a>
         <ul class="treeview-menu">
-          <li class="{{ Route::is('laporanpegawai*') ? 'active' : '' }}">
-            <a href="{{ route('laporanpegawai.index') }}"><i class="fa fa-circle-o"></i> Laporan Pegawai Aktif</a></li>
-        <li class="{{ Route::is('laporanpegawairesign*') ? 'active' : '' }}">
-            <a href="{{ route('laporanpegawairesign.index') }}"><i class="fa fa-circle-o"></i> Laporan Pegawai Resign</a></li>
+          <li class="{{ Route::is('laporanpegawai.*') ? 'active' : '' }}">
+            <a href="{{ route('laporanpegawai.index') }}"><i class="fa fa-circle-o"></i>Laporan Pegawai Aktif</a>
+          </li>
+          <li class="{{ Route::is('laporanpegawairesign.*') ? 'active' : '' }}">
+            <a href="{{ route('laporanpegawairesign.index') }}"><i class="fa fa-circle-o"></i>Laporan Pegawai Resign</a>
+          </li>
         </ul>
       </li>
     @endif
