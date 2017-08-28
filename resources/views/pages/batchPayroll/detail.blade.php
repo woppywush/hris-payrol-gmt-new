@@ -103,6 +103,24 @@
     </div>
   </div>
 
+  <div class="modal modal-default fade" id="myModalTipePembayaran" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Proses Tipe Pembayaran</h4>
+        </div>
+        <div class="modal-body">
+          <p>Apakah anda yakin akan merubah tipe pembayaran ini?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Tidak</button>
+          <a href="" class="btn btn-success" id="settipepembayaran">Ya, saya yakin.</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="modal modal-default fade" id="myModalSetAbsen" role="dialog">
     <div class="modal-dialog">
       <form class="form-horizontal" action="{{route('detailbatchpayroll.updateforabsen')}}" method="post">
@@ -242,6 +260,7 @@
                 <th rowspan="2">Potongan Tetap</th>
                 <th rowspan="2">Potongan Variable</th>
                 <th rowspan="2">Total</th>
+                <th rowspan="2">Tipe Pembayaran</th>
                 <th rowspan="2">Aksi</th>
               </tr>
               <tr>
@@ -286,6 +305,27 @@
                   <td>{{$key['potongantetap']}}</td>
                   <td>{{$key['potonganvariable']}}</td>
                   <td>{{$key['total']}}</td>
+                   @if ($getbatch->flag_processed==1)
+                    @if ($key['tipe_pembayaran']==1)
+                      <td>
+                        <span class="badge">Rekening</span>
+                      </td>
+                    @else
+                      <td>
+                        <span class="badge">Cash</span>
+                      </td>
+                    @endif
+                  @else
+                    @if ($key['tipe_pembayaran']==1)
+                      <td>
+                        <span class="badge bg-green">Rekening</span>
+                      </td>
+                    @else
+                      <td>
+                        <span class="badge bg-red">Cash</span>
+                      </td>
+                    @endif
+                  @endif
                   {{-- <td>{{number_format($key['gajitetap'], '0', ',', '.')}}</td>
                   <td>{{number_format($key['gajivariable'], '0', ',', '.')}}</td>
                   <td>{{number_format($key['potongantetap'], '0', ',', '.')}}</td>
@@ -303,6 +343,11 @@
                           <i class="fa fa-check"></i>
                         </a>
                       </span>
+                      <span data-toggle="tooltip" title="Batch Telah Diproses">
+                        <a href="#" class="btn btn-xs btn-default ubahtipepembayaran disabled" data-toggle="modal" data-target="#myModalTipePembayaran" data-value="{{$key['iddetailbatch']}}">
+                          <i class="fa fa-money"></i>
+                        </a>
+                      </span>
                     </td>
                   @else
                     <td>
@@ -314,6 +359,11 @@
                       <span data-toggle="tooltip" title="Set Absensi">
                         <a href="#" class="btn btn-xs btn-success editabsen {{ $onlyPayroll }}" data-toggle="modal" data-target="#myModalSetAbsen" data-value="{{$key['iddetailbatch']}}">
                           <i class="fa fa-check"></i>
+                        </a>
+                      </span>
+                      <span data-toggle="tooltip" title="Set Tipe Pembayaran">
+                        <a href="#" class="btn btn-xs btn-danger ubahtipepembayaran {{ $onlyPayroll }}" data-toggle="modal" data-target="#myModalTipePembayaran" data-value="{{$key['iddetailbatch']}}">
+                          <i class="fa fa-money"></i>
                         </a>
                       </span>
                     </td>
@@ -902,6 +952,15 @@
            });
          });
       });
+  </script>
+
+  <script type="text/javascript">
+    $(function(){
+      $('a.ubahtipepembayaran').click(function(){
+        var a = $(this).data('value');
+        $('#settipepembayaran').attr('href', "{{ url('/') }}/batch-payroll-detail/ubahtipepembayaran/"+a);
+      });
+    });
   </script>
 
 @stop

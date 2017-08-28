@@ -178,11 +178,7 @@ class ThrController extends Controller
           return "Rp ".number_format($peg->nilai_thr, 0, 0, '.').",-";
         })
         ->addColumn('action', function($user){
-          if ($user->flag_processed==1) {
-            return '<span data-toggle="tooltip" title="Edit Hitungan Bulan Kerja"> <a href="" class="btn btn-xs btn-default disabled editgaji" data-toggle="modal" data-target="#myModalEditGaji" data-value="'.$user->id.'"><i class="fa fa-edit"></i></a></span> <span data-toggle="tooltip" title="Hapus Dari Periode"> <a href="" class="btn btn-xs btn-default disabled hapus" data-toggle="modal" data-target="#myModal" data-value="'.$user->id_periode_gaji.'"><i class="fa fa-close"></i></a></span>';
-          } else {
-            return '<span data-toggle="tooltip" title="Edit Hitungan Bulan Kerja"> <a href="" class="btn btn-xs btn-warning editgaji" data-toggle="modal" data-target="#myModalEditGaji" data-value="'.$user->id.'"><i class="fa fa-edit"></i></a></span> <span data-toggle="tooltip" title="Hapus Dari Periode"> <a href="" class="btn btn-xs btn-danger hapus" data-toggle="modal" data-target="#myModal" data-value="'.$user->id_periode_gaji.'"><i class="fa fa-close"></i></a></span>';
-          }
+           return '<span data-toggle="tooltip" title="Detail Thr Pegawai"> <a href="" class="btn btn-xs btn-success hapus" data-toggle="modal" data-target="#myModal" data-value="'.$user->id_periode_gaji.'"><i class="fa fa-eye"></i></a></span>';
         })
         ->removeColumn('flag_processed')
         ->make();

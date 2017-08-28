@@ -244,6 +244,7 @@ Route::get('batch-payroll-detail/get-gapok/{idpegawai}', 'BatchPayrollDetailCont
 Route::get('batch-payroll-detail/delete-komponen-gaji/{id}', 'BatchPayrollDetailController@deletekomponengaji')->name('detailbatchpayroll.deletekomponen');
 Route::get('batch-payroll-detail/bind-for-absen/{id}', 'BatchPayrollDetailController@bindforabsen')->name('detailbatchpayroll.bindforabsen');
 Route::post('batch-payroll-detail/update-for-absen', 'BatchPayrollDetailController@updateforabsen')->name('detailbatchpayroll.updateforabsen');
+Route::get('batch-payroll-detail/ubahtipepembayaran/{id}', 'BatchPayrollDetailController@ubahtipepembayaran')->name('detailbatchpayroll.ubahtipepembayaran');
 
 ///// EXPORT IMPORT DETAIL BATCH PAYROLL ////
 Route::get('batch-payroll-detail/export/{idbatch}', 'BatchPayrollDetailController@export')->name('detailbatchpayroll.export');

@@ -297,4 +297,20 @@ class BatchPayrollDetailController extends Controller
 
       return redirect()->route('batchpayroll.detail', $idbatch)->with('message', 'Berhasil melakukan import data.');
     }
+
+
+    public function ubahtipepembayaran($id)
+    {
+      $set = PrBatchPayrollDetail::find($id);
+      // dd($set);
+      if($set->tipe_pembayaran=="1") {
+        $set->tipe_pembayaran = 0;
+        $set->save();
+      } elseif ($set->tipe_pembayaran=="0") {
+        $set->tipe_pembayaran = 1;
+        $set->save();
+      }
+
+      return redirect()->route('batchpayroll.detail', $set->id_batch_payroll)->with('message', 'Tipe Pembayaran berhasil diperbarui.');
+    }
 }
