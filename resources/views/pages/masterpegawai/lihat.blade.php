@@ -2002,6 +2002,39 @@
                 </td>
               </tr>
               <tr>
+                <td>Jabatan</td>
+                <td>:</td>
+                <td id="tdlabeljabatan"><b data-value="{{$pegawai->jabatan}}" id="valbank">{{ $pegawai->nama_jabatan}}</b></td>
+                <td id="tdtextjabatan" class="{{ $errors->has('jabatan') ? 'has-error' : '' }}">
+                  <select class="form-control" name="jabatan">
+                    <option value="-- Pilih --">-- Pilih --</option>
+                    @if(count($errors)>0)
+                      @foreach($DataJabatan as $key)
+                        @if(old('nama_jabatan')==$key->id)
+                          <option value="{{$key->id}}" selected>{{$key->nama_jabatan}}</option>
+                        @else
+                          <option value="{{$key->id}}">{{$key->nama_jabatan}}</option>
+                        @endif
+                      @endforeach
+                    @else
+                      @foreach($DataJabatan as $key)
+                        @if($pegawai->nama_jabatan==$key->nama_jabatan)
+                          <option value="{{$key->id}}" selected>{{$key->nama_jabatan}}</option>
+                        @else
+                          <option value="{{$key->id}}">{{$key->nama_jabatan}}</option>
+                        @endif
+                      @endforeach
+                    @endif
+                  </select>
+                  @if($errors->has('jabatan'))
+                   <span class="help-block">
+                     <strong>{{ $errors->first('jabatan')}}
+                     </strong>
+                   </span>
+                  @endif
+                </td>
+              </tr>
+              <tr>
                 <td>No Rekening</td>
                 <td>:</td>
                 <td id="tdlabelrekening"><b>{{ $pegawai->no_rekening}}</b></td>
@@ -3252,6 +3285,7 @@
         $('#tdlabeljamtraining').hide();
         $('#tdlabelwarga').hide();
         $('#tdlabelbank').hide();
+        $('#tdlabeljabatan').hide();
         $('#tdlabeljabatan').hide();
         $('a#editpegawai').hide();
 

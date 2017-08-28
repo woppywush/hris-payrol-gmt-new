@@ -244,7 +244,7 @@ class MasterPegawaiController extends Controller
                         ->where('master_pegawai.id', '=', $id)
                         ->get();
                         // dd($DataPegawai);
-      $DataJabatan    = MasterJabatan::all();
+      $DataJabatan    = MasterJabatan::select('*')->get();
       $DataBank       = MasterBank::where('flag_status', '=', 1)->get();
 
       $idofpegawai;
@@ -274,57 +274,58 @@ class MasterPegawaiController extends Controller
 
     public function saveChangesPegawai(Request $request)
     {
-      // $messages = [
-      //     'nama.required' => 'Nama harus diisi',
-      //     'nip.required' => 'NIP harus diisi',
-      //     'ktp.required' => 'KTP harus diisi',
-      //     'kk.required' => 'KK harus diisi',
-      //     'npwp.required' => 'NPWP harus diisi',
-      //     'tgllahir.required' => 'Tanggal lahir harus diisi',
-      //     'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
-      //     'email.required' => 'Email harus diisi',
-      //     'email.email' => 'Format email tidak valid',
-      //     'alamat.required' => 'Alamat harus diisi',
-      //     'agama.required' => 'Agama harus dipilih',
-      //     'agama.not_in' => 'Agama harus dipilih',
-      //     'telp.required' => 'Telp harus diisi',
-      //     'telp.numeric' => 'Telp harus diisi dengan angka',
-      //     'warga.required' => 'Kewarganegaraan harus diisi',
-      //     'warga.not_in' => 'Kewarganegaraan harus diisi',
-      //     'bpjssehat.required' => 'BPJS Kesehatan harus diisi',
-      //     'bpjskerja.required' => 'BPJS Ketenagakerjaan harus diisi',
-      //     'rekening.required' => 'Rekening harus diisi',
-      //     'jabatan.required' => 'Jabatan harus diisi',
-      //     'jabatan.not_in' => 'Jabatan harus diisi',
-      //     'bank.required' => 'Bank harus diisi',
-      //     'bank.not_in' => 'Bank harus diisi'
-      // ];
+      // dd($request);
+      $messages = [
+          'nama.required' => 'Nama harus diisi',
+          'nip.required' => 'NIP harus diisi',
+          'ktp.required' => 'KTP harus diisi',
+          'kk.required' => 'KK harus diisi',
+          'npwp.required' => 'NPWP harus diisi',
+          'tgllahir.required' => 'Tanggal lahir harus diisi',
+          'jenis_kelamin.required' => 'Jenis kelamin harus diisi',
+          'email.required' => 'Email harus diisi',
+          'email.email' => 'Format email tidak valid',
+          'alamat.required' => 'Alamat harus diisi',
+          'agama.required' => 'Agama harus dipilih',
+          'agama.not_in' => 'Agama harus dipilih',
+          'telp.required' => 'Telp harus diisi',
+          'telp.numeric' => 'Telp harus diisi dengan angka',
+          'warga.required' => 'Kewarganegaraan harus diisi',
+          'warga.not_in' => 'Kewarganegaraan harus diisi',
+          'bpjssehat.required' => 'BPJS Kesehatan harus diisi',
+          'bpjskerja.required' => 'BPJS Ketenagakerjaan harus diisi',
+          'rekening.required' => 'Rekening harus diisi',
+          'jabatan.required' => 'Jabatan harus diisi',
+          'jabatan.not_in' => 'Jabatan harus diisi',
+          'bank.required' => 'Bank harus diisi',
+          'bank.not_in' => 'Bank harus diisi'
+      ];
 
-      // $validator = Validator::make($request->all(), [
-      //   'nama' => 'required',
-      //   'nip' => 'required',
-      //   'ktp' => 'required',
-      //   'kk' => 'required',
-      //   'npwp' => 'required',
-      //   'tgllahir' => 'required',
-      //   'jenis_kelamin' => 'required',
-      //   'email' => 'required|email',
-      //   'alamat' => 'required',
-      //   'agama' => 'required|not_in:-- Pilih --',
-      //   'telp' => 'required|numeric',
-      //   'warga' => 'required|not_in:-- Pilih --',
-      //   'bpjssehat' => 'required',
-      //   'bpjskerja' => 'required',
-      //   'rekening' => 'required',
-      //   'jabatan' => 'required|not_in:-- Pilih --',
-      //   'bank' => 'required|not_in:-- Pilih --'
-      // ], $messages);
+      $validator = Validator::make($request->all(), [
+        'nama' => 'required',
+        'nip' => 'required',
+        'ktp' => 'required',
+        'kk' => 'required',
+        'npwp' => 'required',
+        'tgllahir' => 'required',
+        'jenis_kelamin' => 'required',
+        'email' => 'required|email',
+        'alamat' => 'required',
+        'agama' => 'required|not_in:-- Pilih --',
+        'telp' => 'required|numeric',
+        'warga' => 'required|not_in:-- Pilih --',
+        'bpjssehat' => 'required',
+        'bpjskerja' => 'required',
+        'rekening' => 'required',
+        'jabatan' => 'required|not_in:-- Pilih --',
+        'bank' => 'required|not_in:-- Pilih --'
+      ], $messages);
 
-      // if ($validator->fails()) {
-      //   return redirect()->route('masterpegawai.show', $request->id_pegawai)
-      //     ->withErrors($validator)
-      //     ->withInput();
-      // }
+      if ($validator->fails()) {
+        return redirect()->route('masterpegawai.show', $request->id_pegawai)
+          ->withErrors($validator)
+          ->withInput();
+      }
 
       $pegawai = MasterPegawai::find($request->id_pegawai);
       $pegawai->nama  = $request->nama;
