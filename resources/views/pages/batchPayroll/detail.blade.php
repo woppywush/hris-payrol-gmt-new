@@ -652,6 +652,7 @@
                           "<td>"+data[0][index].potongantetap+"</td>"+
                           "<td>"+data[0][index].potonganvariable+"</td>"+
                           "<td>"+data[0][index].total+"</td>"+
+                          "<td>"+data[0][index].tipe_pembayaran+"</td>"+
                           "<td>"+
                             "<span data-toggle='tooltip' title='Set Komponen Gaji'>"+
                               "<a href='#' class='btn btn-xs btn-warning addkomponen' data-toggle='modal' data-target='#myModal' data-value='"+data[0][index].id+"'>"+
@@ -661,6 +662,11 @@
                             "<span data-toggle='tooltip' title='Set Absensi'>"+
                               "<a href='#' class='btn btn-xs btn-success editabsen' data-toggle='modal' data-target='#myModalSetAbsen' data-value='"+data[0][index].iddetailbatch+"'>"+
                                 "<i class='fa fa-check'></i>"+
+                              "</a>"+
+                            "</span>"+
+                            "<span data-toggle='tooltip' title='Set Tipe Pembayaran'>"+
+                              "<a href='#' class='btn btn-xs btn-danger ubahtipepembayaran' data-toggle='modal' data-target='#myModalTipePembayaran' data-value='"+data[0][index].iddetailbatch+"'>"+
+                                "<i class='fa fa-money'></i>"+
                               "</a>"+
                             "</span>"+
                           "</td>"+
@@ -765,6 +771,7 @@
                           "<td>"+data[0][index].potongantetap+"</td>"+
                           "<td>"+data[0][index].potonganvariable+"</td>"+
                           "<td>"+data[0][index].total+"</td>"+
+                          "<td>"+data[0][index].tipe_pembayaran+"</td>"+
                           "<td>"+
                             "<span data-toggle='tooltip' title='Set Komponen Gaji'>"+
                               "<a href='#' class='btn btn-xs btn-warning addkomponen' data-toggle='modal' data-target='#myModal' data-value='"+data[0][index].id+"'>"+
@@ -774,6 +781,11 @@
                             "<span data-toggle='tooltip' title='Set Absensi'>"+
                               "<a href='#' class='btn btn-xs btn-success editabsen' data-toggle='modal' data-target='#myModalSetAbsen' data-value='"+data[0][index].iddetailbatch+"'>"+
                                 "<i class='fa fa-check'></i>"+
+                              "</a>"+
+                            "</span>"+
+                            "<span data-toggle='tooltip' title='Set Tipe Pembayaran'>"+
+                              "<a href='#' class='btn btn-xs btn-danger ubahtipepembayaran' data-toggle='modal' data-target='#myModalTipePembayaran' data-value='"+data[0][index].iddetailbatch+"'>"+
+                                "<i class='fa fa-money'></i>"+
                               "</a>"+
                             "</span>"+
                           "</td>"+
@@ -877,6 +889,7 @@
                             "<td>"+data[0][index].potongantetap+"</td>"+
                             "<td>"+data[0][index].potonganvariable+"</td>"+
                             "<td>"+data[0][index].total+"</td>"+
+                            "<td>"+data[0][index].tipe_pembayaran+"</td>"+
                             "<td>"+
                               "<span data-toggle='tooltip' title='Set Komponen Gaji'>"+
                                 "<a href='#' class='btn btn-xs btn-warning addkomponen' data-toggle='modal' data-target='#myModal' data-value='"+data[0][index].id+"'>"+
@@ -888,6 +901,11 @@
                                   "<i class='fa fa-check'></i>"+
                                 "</a>"+
                               "</span>"+
+                              "<span data-toggle='tooltip' title='Set Tipe Pembayaran'>"+
+                              "<a href='#' class='btn btn-xs btn-danger ubahtipepembayaran' data-toggle='modal' data-target='#myModalTipePembayaran' data-value='"+data[0][index].iddetailbatch+"'>"+
+                                "<i class='fa fa-money'></i>"+
+                              "</a>"+
+                            "</span>"+
                             "</td>"+
                           "</tr>"
                         );

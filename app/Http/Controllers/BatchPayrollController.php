@@ -344,7 +344,7 @@ class BatchPayrollController extends Controller
     public function refreshrowdatatables($id)
     {
       $getdetailbatchpayroll = PrBatchPayrollDetail::
-            select('pr_batch_payroll_detail.id as id_detail_batch', 'master_pegawai.id', 'master_pegawai.nip', 'master_pegawai.nama', 'master_jabatan.nama_jabatan', 'pr_batch_payroll_detail.workday', 'abstain', 'sick_leave', 'permissed_leave')
+            select('pr_batch_payroll_detail.id as id_detail_batch', 'master_pegawai.id', 'master_pegawai.nip', 'master_pegawai.nama', 'master_jabatan.nama_jabatan', 'pr_batch_payroll_detail.workday', 'abstain', 'sick_leave', 'permissed_leave', 'tipe_pembayaran')
             ->join('master_pegawai', 'pr_batch_payroll_detail.id_pegawai', '=', 'master_pegawai.id')
             ->join('master_jabatan', 'master_pegawai.id_jabatan', '=', 'master_jabatan.id')
             ->where('id_batch_payroll', $id)
@@ -370,6 +370,14 @@ class BatchPayrollController extends Controller
         $rowdata["abstain"] = $key->abstain;
         $rowdata["sick_leave"] = $key->sick_leave;
         $rowdata["permissed_leave"] = $key->permissed_leave;
+        $rowdata["tipe_pembayaran"] = $key->tipe_pembayaran;
+
+        if ($rowdata["tipe_pembayaran"] == 1) {
+          $rowdata["tipe_pembayaran"] = "<span class='badge bg-green'>Rekening</span>";
+        } else {
+          $rowdata["tipe_pembayaran"] = "<span class='badge bg-red'>Cash</span>";
+        }
+        
 
         $harinormal = $key->workday;
         $totaltidakmasuk = $key->abstain + $key->sick_leave + $key->permissed_leave;
