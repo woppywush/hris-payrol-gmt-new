@@ -254,6 +254,13 @@
     });
   </script>
 
+  
+  <script type="text/javascript">
+    $('#modalEdit').on('hidden.bs.modal', function () {
+     location.reload();
+    });
+  </script>
+
   <script type="text/javascript">
   $(document).ready(function(){
     $(".select2").select2();
