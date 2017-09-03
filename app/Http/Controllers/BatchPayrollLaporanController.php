@@ -114,6 +114,7 @@ class BatchPayrollLaporanController extends Controller
                                       AND a.id_client = e.id
                                       AND c.id_batch_payroll = $id
                                       GROUP BY a.nama_cabang");
+
       $getCabangClient = collect($getCabangClient);
 
       $getkomponengajinya = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
@@ -177,7 +178,7 @@ class BatchPayrollLaporanController extends Controller
 
       // Start Query Detail Gaji Karyawan
       $query1 = "SELECT pegawai.id, pegawai.nip, pegawai.nama as nama_pegawai, pegawai.no_rekening, pegawai.id_bank, IFNULL(tabel_Workday.workday, 0) as Jumlah_Workday, IFNULL(tabel_Jabatan.nama_jabatan, 0) as Jabatan ";
-      $query2 = "FROM (select a.id, a.nip, a.nama, a.no_rekening, a.id_bank from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
+      $query2 = "FROM (select a.id, a.nip, a.nama, a.no_rekening, a.id_bank from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.tipe_pembayaran = 1 and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
       $query3 = "LEFT OUTER JOIN (SELECT d.id, d.nama, c.workday as workday FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id GROUP BY d.id) as tabel_Workday ON pegawai.id = tabel_Workday.id ";
       $query4 = "LEFT OUTER JOIN(SELECT b.nama_jabatan, a.id FROM master_pegawai a, master_jabatan b WHERE a.id_jabatan = b.id) as tabel_Jabatan ON pegawai.id = tabel_Jabatan.id ";
       foreach ($getkomponengajinya as $komponen) {
@@ -204,7 +205,7 @@ class BatchPayrollLaporanController extends Controller
         foreach ($totalkerjabulan as $totalkerja){
           if ($totalkerja->id_pegawai == $key->id){
             $hasilgajihari = $key->Jumlah_GAJI_POKOK / $totalkerja->workday;
-            $hasilgajihari = round($hasilgajihari);
+            $hasilgajihari = $hasilgajihari;
             $dapatgaji = $hasilgajihari * $totalkerja->jumlah_kerja;
           }
         }
@@ -271,7 +272,7 @@ class BatchPayrollLaporanController extends Controller
         $query2 = "FROM (select a.id, a.nip, a.nama from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
         $query3 = "LEFT OUTER JOIN (SELECT d.id, d.nama, c.workday as workday FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id GROUP BY d.id) as tabel_Workday ON pegawai.id = tabel_Workday.id ";
         $query4 = "LEFT OUTER JOIN(SELECT b.nama_jabatan, a.id FROM master_pegawai a, master_jabatan b WHERE a.id_jabatan = b.id) as tabel_Jabatan ON pegawai.id = tabel_Jabatan.id ";
-        $query5 = "LEFT OUTER JOIN(SELECT a.id as id_cabang, c.id_pegawai as id_pegawai FROM master_client_cabang a, hr_pkwt b, pr_batch_payroll_detail c WHERE a.id = b.id_cabang_client AND b.id_pegawai = c.id_pegawai AND c.id_batch_payroll = $id) as tabel_Cabang ON pegawai.id = tabel_Cabang.id_pegawai ";
+        $query5 = "LEFT OUTER JOIN(SELECT a.id as id_cabang, c.id_pegawai as id_pegawai FROM master_client_cabang a, hr_pkwt b, pr_batch_payroll_detail c WHERE a.id = b.id_cabang_client AND b.id_pegawai = c.id_pegawai AND c.id_batch_payroll = $id AND b.status_pkwt = 1 GROUP BY b.id_pegawai) as tabel_Cabang ON pegawai.id = tabel_Cabang.id_pegawai ";
         foreach ($getkomponengajinya as $komponen) {
           $replace = str_replace(' ', '_', $komponen->nama_komponen);
           $query1 .=  ",IFNULL(tabel_$replace.nilai, 0) as Jumlah_$replace ";
@@ -328,14 +329,14 @@ class BatchPayrollLaporanController extends Controller
               foreach ($totalkerjabulan as $totalkerja){
                 if ($totalkerja->id_pegawai == $key->id){
                   $hasilgajihari = $key->Jumlah_GAJI_POKOK / $totalkerja->workday;
-                  $hasilgajihari = round($hasilgajihari);
+                  $hasilgajihari = $hasilgajihari;
                   $dapatgaji = $hasilgajihari * $totalkerja->jumlah_kerja;
                 }
               }
 
               foreach ($totalkerjabulan as $totalkerja){
                 if ($totalkerja->id_pegawai == $key->id){
-                    $transportmakan = $totalkerja->jumlah_kerja * $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN;
+                    $transportmakan = floor($totalkerja->jumlah_kerja * $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN);
                 }
               }
 
@@ -366,7 +367,9 @@ class BatchPayrollLaporanController extends Controller
               $Jumlah_POTONGAN_CONSUMABLE += $key->Jumlah_POTONGAN_CONSUMABLE;
 
               $jumlahPotongannya = $key->Jumlah_BPJS_KESEHATAN + $key->Jumlah_POTONGAN_KAS + $key->Jumlah_BPJS_KETENAGAKERJAAN + $key->Jumlah_POTONGAN_PINJAMAN + $key->Jumlah_POTONGAN_SERAGAM + $key->Jumlah_POTONGAN_CONSUMABLE + $key->Jumlah_BPJS_PENSIUN;
+
               $grandTotalGaji += $jumlahGajinya - $jumlahPotongannya;
+              // dd($jumlahGajinya, $jumlahPotongannya, $grandTotalGaji);
             }
           }
 
@@ -390,8 +393,189 @@ class BatchPayrollLaporanController extends Controller
 
     }
 
-    public function prosesSlipGaji()
+    public function prosesSlipGaji($id)
     {
-      return view('pages.laporanPayroll.slipGaji');
+
+        $getCabangClient = DB::select("SELECT a.id, a.nama_cabang, e.nama_client
+                                      FROM master_client_cabang a, hr_pkwt b, pr_batch_payroll_detail c, master_pegawai d, master_client e
+                                      WHERE a.id = b.id_cabang_client
+                                      AND c.id_pegawai = d.id
+                                      AND b.id_pegawai = c.id_pegawai
+                                      AND a.id_client = e.id
+                                      AND c.id_batch_payroll = $id
+                                      GROUP BY a.nama_cabang");
+
+        $getCabangClient = collect($getCabangClient);
+
+        $getkomponengajinya = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+        $getbank = MasterBank::get();
+
+        // Get Batch Payrol
+        $getbatch = PrBatchPayroll::join('pr_periode_gaji', 'pr_batch_payroll.id_periode_gaji', '=', 'pr_periode_gaji.id')
+                                  ->where('pr_batch_payroll.id', $id)->first();
+
+        // Start Query Detail Gaji Karyawan
+        $query1 = "SELECT pegawai.id, pegawai.nip, pegawai.nama as nama_pegawai, pegawai.no_rekening, pegawai.id_bank, pegawai.tipe_pembayaran, IFNULL(tabel_Workday.workday, 0) as Jumlah_Workday, IFNULL(tabel_Jabatan.nama_jabatan, 0) as Jabatan, IFNULL(tabel_Cabang.id_cabang, 0) as Cabang ";
+        $query2 = "FROM (select a.id, a.nip, a.nama, a.no_rekening, a.id_bank, pr_batch_payroll_detail.tipe_pembayaran from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
+        $query3 = "LEFT OUTER JOIN (SELECT d.id, d.nama, c.workday as workday FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id GROUP BY d.id) as tabel_Workday ON pegawai.id = tabel_Workday.id ";
+        $query4 = "LEFT OUTER JOIN(SELECT b.nama_jabatan, a.id FROM master_pegawai a, master_jabatan b WHERE a.id_jabatan = b.id) as tabel_Jabatan ON pegawai.id = tabel_Jabatan.id ";
+        $query5 = "LEFT OUTER JOIN(SELECT a.id as id_cabang, c.id_pegawai as id_pegawai FROM master_client_cabang a, hr_pkwt b, pr_batch_payroll_detail c WHERE a.id = b.id_cabang_client AND b.id_pegawai = c.id_pegawai AND c.id_batch_payroll = $id AND b.status_pkwt = 1 GROUP BY b.id_pegawai) as tabel_Cabang ON pegawai.id = tabel_Cabang.id_pegawai ";
+        foreach ($getkomponengajinya as $komponen) {
+          $replace = str_replace(' ', '_', $komponen->nama_komponen);
+          $query1 .=  ",IFNULL(tabel_$replace.nilai, 0) as $replace ";
+          $query2 .= "LEFT OUTER JOIN (SELECT d.id, d.nama, b.nilai as nilai FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id AND a.id = $komponen->id GROUP BY d.id) as tabel_$replace ON pegawai.id = tabel_$replace.id ";
+        }
+        // End Query Detail Gaji Karyawan
+
+        $getkomponengaji = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+        $hasilQuery = DB::select($query1.$query2.$query3.$query4.$query5);
+        // $hasilQuery = collect($hasilQuery);
+
+        $hasilQuery = array_map(function ($value) {
+                    return (array)$value;
+                }, $hasilQuery);
+
+        $totalkerjabulan = DB::select("SELECT id_pegawai, workday, SUM(workday - (abstain+sick_leave+permissed_leave)) as jumlah_kerja
+                                      FROM pr_batch_payroll_detail
+                                      WHERE id_batch_payroll = '$id'
+                                      GROUP BY id_pegawai");
+        $totalkerjabulan = collect($totalkerjabulan);
+
+
+        // dd($hasilQuery,$getkomponengajinya,$totalkerjabulan,$getCabangClient);
+
+        foreach ($hasilQuery as $payroll)
+        {
+          $slipPegawai = array();
+          $slipPegawai["tanggal_proses"] = $getbatch->tanggal_proses;
+          $slipPegawai["tanggal_proses_akhir"] = $getbatch->tanggal_proses_akhir;
+          $slipPegawai["nama_pegawai"] = $payroll["nama_pegawai"];
+          $slipPegawai["jabatan"] = $payroll["Jabatan"];
+          $slipPegawai["no_rekening"] = $payroll["no_rekening"];
+          $slipPegawai["tipe_pembayaran"] = $payroll["tipe_pembayaran"];
+
+          foreach ($getCabangClient as $cabangClient)
+          {
+            if($cabangClient->id == $payroll["Cabang"])
+            $slipPegawai["client"] =  $cabangClient->nama_client;
+            $slipPegawai["cabang"] =  $cabangClient->nama_cabang;
+          }
+
+          foreach ($totalkerjabulan as $harikerja)
+          {
+            if($harikerja->id_pegawai == $payroll["id"])
+            {
+              $slipPegawai["hari_kerja"] = $harikerja->jumlah_kerja.'/'.$harikerja->workday;
+            }
+          }
+
+          $slipPegawai["penerimaan"] = array();
+          foreach ($getkomponengajinya as $terima)
+          {
+            if($terima->tipe_komponen == "D")
+            {
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'GAJI_POKOK')
+              {
+                $slipPegawai["penerimaan"]["gaji_pokok"] = $payroll["GAJI_POKOK"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'TUNJANGAN_JABATAN')
+              {
+                $slipPegawai["penerimaan"]["tunjangan_jabatan"] = $payroll["TUNJANGAN_JABATAN"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'TUNJANGAN_INSENTIF')
+              {
+                $slipPegawai["penerimaan"]["tunjangan_insentif"] = $payroll["TUNJANGAN_INSENTIF"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'TUNJANGAN_LEMBUR')
+              {
+                $slipPegawai["penerimaan"]["tunjangan_lembur"] = $payroll["TUNJANGAN_LEMBUR"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'KEKURANGAN_BULAN_LALU')
+              {
+                $slipPegawai["penerimaan"]["kekurangan_bulan_lalu"] = $payroll["KEKURANGAN_BULAN_LALU"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'TUNJANGAN_TRANSPORT_MAKAN')
+              {
+                $slipPegawai["penerimaan"]["tunjangan_transport_makan"] = $payroll["TUNJANGAN_TRANSPORT_MAKAN"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'KETUA_REGU')
+              {
+                $slipPegawai["penerimaan"]["ketua_regu"] = $payroll["KETUA_REGU"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'PENGEMBALIAN_SERAGAM')
+              {
+                $slipPegawai["penerimaan"]["pengembalian_seragam"] = $payroll["PENGEMBALIAN_SERAGAM"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'TUNJANGAN_MAKAN_LEMBUR')
+              {
+                $slipPegawai["penerimaan"]["tunjangan_makan_lembur"] = $payroll["TUNJANGAN_MAKAN_LEMBUR"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'SALARY')
+              {
+                $slipPegawai["penerimaan"]["salary"] = $payroll["SALARY"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'SHIFT_PAGI_SIANG')
+              {
+                $slipPegawai["penerimaan"]["shift_pagi_siang"] = $payroll["SHIFT_PAGI_SIANG"];
+              }
+              if(str_replace(' ', '_', $terima->nama_komponen) == 'TUNJANGAN_MAKAN_TRANSPORT')
+              {
+                $slipPegawai["penerimaan"]["tunjangan_makan_transport"] = $payroll["TUNJANGAN_MAKAN_TRANSPORT"];
+              }
+            }
+          }
+
+          $slipPegawai["potongan"] = array();
+          foreach ($getkomponengajinya as $potong)
+          {
+            if($potong->tipe_komponen == "P")
+            {
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'BPJS_KESEHATAN')
+              {
+                $slipPegawai["potongan"]["bpjs_kesehatan"] = $payroll["BPJS_KESEHATAN"];
+              }
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'BPJS_KETENAGAKERJAAN')
+              {
+                $slipPegawai["potongan"]["bpjs_ketenagakerjaan"] = $payroll["BPJS_KETENAGAKERJAAN"];
+              }
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'BPJS_PENSIUN')
+              {
+                $slipPegawai["potongan"]["bpjs_pensiun"] = $payroll["BPJS_PENSIUN"];
+              }
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'POTONGAN_KAS')
+              {
+                $slipPegawai["potongan"]["potongan_kas"] = $payroll["POTONGAN_KAS"];
+              }
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'POTONGAN_PINJAMAN')
+              {
+                $slipPegawai["potongan"]["potongan_pinjaman"] = $payroll["POTONGAN_PINJAMAN"];
+              }
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'POTONGAN_SERAGAM')
+              {
+                $slipPegawai["potongan"]["potongan_seragam"] = $payroll["POTONGAN_SERAGAM"];
+              }
+              if(str_replace(' ', '_', $potong->nama_komponen) == 'POTONGAN_CONSUMABLE')
+              {
+                $slipPegawai["potongan"]["potongan_consumable"] = $payroll["POTONGAN_CONSUMABLE"];
+              }
+            }
+          }
+
+          foreach ($getbank as $bank)
+          {
+            if($bank->id == $payroll["id_bank"])
+            {
+              $slipPegawai["bank"] = $bank->nama_bank;
+            }
+          }
+
+        $rekapslip[] = $slipPegawai;
+        }
+
+// dd($rekapslip,$hasilQuery,$getkomponengajinya,$totalkerjabulan,$getCabangClient);
+
+        return view('pages.laporanPayroll.slipGaji', compact('rekapslip'));
     }
 }

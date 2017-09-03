@@ -18,7 +18,7 @@
       <tr style="border: 1px solid black;">
         <td style="border: 1px solid black;">{{ $no }}</td>
         <td style="border: 1px solid black;">{{ $nilai["client"] }}</td>
-        <td style="border: 1px solid black;">{{ $nilai["grandTotalGaji"] }}</td>
+        <td style="border: 1px solid black; text-align:right;">{{ number_format($nilai["grandTotalGaji"],0,'','.') }}</td>
       </tr>
       @php
         $no++;
@@ -27,7 +27,7 @@
       <tr style="border: 1px solid black;">
         <td></td>
         <td style="border: 1px solid black;">TOTAL</td>
-        <td style="border: 1px solid black;">{{ $nilaiClient->sum("grandTotalGaji")}}</td>
+        <td style="border: 1px solid black;text-align:right;">{{ number_format($nilaiClient->sum("grandTotalGaji"),0,'','.')}}</td>
       </tr>
     </table>
 

@@ -25,7 +25,7 @@
         <td style="border: 1px solid black;">{{ $nilai["no_rekening"] }}</td>
         <td style="border: 1px solid black;">{{ $nilai["nama_pegawai"] }}</td>
         <td style="border: 1px solid black;">IDR</td>
-        <td style="border: 1px solid black;">{{ $nilai["grandTotalGaji"] }}</td>
+        <td style="border: 1px solid black;">{{ number_format($nilai["grandTotalGaji"],0,'','.') }}</td>
         <td style="border: 1px solid black;">{{ $getbatch->tanggal_proses}} s/d {{ $getbatch->tanggal_proses_akhir }}</td>
       </tr>
       @php
@@ -39,7 +39,7 @@
         <td style="border: 2px solid black;"><b>TOTAL</b></td>
         <td></td>
         <td></td>
-        <td style="border: 2px solid black;"><b>{{ $grandTransfer }}</b></td>
+        <td style="border: 2px solid black;"><b>{{ number_format($grandTransfer,0,'','.') }}</b></td>
         <td></td>
       </tr>
     </table>
