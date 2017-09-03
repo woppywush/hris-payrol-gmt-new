@@ -256,6 +256,7 @@ Route::get('batch-payroll/laporan-proses-spv/{id}', 'BatchPayrollLaporanControll
 Route::get('batch-payroll/laporan-proses-all/{id}', 'BatchPayrollLaporanController@prosesAll')->name('laporan.prosesAll');
 Route::get('batch-payroll/laporan-proses-client/{id}', 'BatchPayrollLaporanController@prosesClient')->name('laporan.prosesClient');
 Route::get('batch-payroll/laporan-proses-bank/{id}', 'BatchPayrollLaporanController@prosesBank')->name('laporan.prosesBank');
+Route::get('batch-payroll/laporan-proses-cash/{id}', 'BatchPayrollLaporanController@prosesCash')->name('laporan.prosesCash');
 Route::get('batch-payroll/laporan-proses-slipgaji/{id}', 'BatchPayrollLaporanController@prosesSlipGaji')->name('laporan.prosesSlipGaji');
 Route::get('testslip', function(){
 	return view('pages.LaporanPayroll.slipGaji');

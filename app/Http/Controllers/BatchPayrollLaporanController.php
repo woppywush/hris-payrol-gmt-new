@@ -250,6 +250,87 @@ class BatchPayrollLaporanController extends Controller
       return response()->json(['success' => 200]);
     }
 
+    public function prosesCash($id)
+    {
+      // Get Batch Payrol
+      $getbatch = PrBatchPayroll::join('pr_periode_gaji', 'pr_batch_payroll.id_periode_gaji', '=', 'pr_periode_gaji.id')
+                                ->where('pr_batch_payroll.id', $id)->first();
+
+      $getkomponengajinya = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+      // Start Query Detail Gaji Karyawan
+      $query1 = "SELECT pegawai.id, pegawai.nip, pegawai.nama as nama_pegawai, pegawai.no_rekening, pegawai.id_bank, pegawai.tipe_pembayaran, IFNULL(tabel_Workday.workday, 0) as Jumlah_Workday, IFNULL(tabel_Jabatan.nama_jabatan, 0) as Jabatan ";
+      $query2 = "FROM (select a.id, a.nip, a.nama, a.no_rekening, a.id_bank, pr_batch_payroll_detail.tipe_pembayaran from master_pegawai a, pr_batch_payroll_detail where a.id = pr_batch_payroll_detail.id_pegawai and pr_batch_payroll_detail.id_batch_payroll = $id) as pegawai ";
+      $query3 = "LEFT OUTER JOIN (SELECT d.id, d.nama, c.workday as workday FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id GROUP BY d.id) as tabel_Workday ON pegawai.id = tabel_Workday.id ";
+      $query4 = "LEFT OUTER JOIN(SELECT b.nama_jabatan, a.id FROM master_pegawai a, master_jabatan b WHERE a.id_jabatan = b.id) as tabel_Jabatan ON pegawai.id = tabel_Jabatan.id ";
+      foreach ($getkomponengajinya as $komponen) {
+        $replace = str_replace(' ', '_', $komponen->nama_komponen);
+        $query1 .=  ",IFNULL(tabel_$replace.nilai, 0) as Jumlah_$replace ";
+        $query2 .= "LEFT OUTER JOIN (SELECT d.id, d.nama, b.nilai as nilai FROM master_komponen_gaji a, pr_komponen_gaji_detail b, pr_batch_payroll_detail c, master_pegawai d WHERE b.id_komponen_gaji = a.id AND b.id_batch_payroll_detail = c.id AND d.id = c.id_pegawai AND c.id_batch_payroll = $id AND a.id = $komponen->id GROUP BY d.id) as tabel_$replace ON pegawai.id = tabel_$replace.id ";
+      }
+      // End Query Detail Gaji Karyawan
+
+      $getkomponengaji = MasterKomponenGaji::orderby('tipe_komponen', 'asc')->get();
+
+      $hasilQuery = DB::select($query1.$query2.$query3.$query4);
+      $hasilQuery = collect($hasilQuery);
+
+      $totalkerjabulan = DB::select("SELECT id_pegawai, workday, SUM(workday - (abstain+sick_leave+permissed_leave)) as jumlah_kerja
+                                    FROM pr_batch_payroll_detail
+                                    WHERE id_batch_payroll = '$id'
+                                    GROUP BY id_pegawai");
+      $totalkerjabulan = collect($totalkerjabulan);
+
+      $nilaiTransfer = array();
+      foreach($hasilQuery as $key)
+      {
+        if($key->id_bank == null || $key->tipe_pembayaran == 0){
+          foreach ($totalkerjabulan as $totalkerja){
+            if ($totalkerja->id_pegawai == $key->id){
+              $hasilgajihari = $key->Jumlah_GAJI_POKOK / $totalkerja->workday;
+              $hasilgajihari = $hasilgajihari;
+              $dapatgaji = $hasilgajihari * $totalkerja->jumlah_kerja;
+            }
+          }
+
+          foreach ($totalkerjabulan as $totalkerja){
+            if ($totalkerja->id_pegawai == $key->id){
+                $transportmakan = $totalkerja->jumlah_kerja * $key->Jumlah_TUNJANGAN_TRANSPORT_MAKAN;
+            }
+          }
+
+          $jumlahGajinya = $dapatgaji + $key->Jumlah_TUNJANGAN_JABATAN + $key->Jumlah_TUNJANGAN_INSENTIF + $key->Jumlah_TUNJANGAN_LEMBUR + $key->Jumlah_KEKURANGAN_BULAN_LALU + $transportmakan + $key->Jumlah_KETUA_REGU + $key->Jumlah_PENGEMBALIAN_SERAGAM + $key->Jumlah_TUNJANGAN_MAKAN_LEMBUR + $key->Jumlah_SALARY + $key->Jumlah_SHIFT_PAGI_SIANG + $key->Jumlah_TUNJANGAN_MAKAN_TRANSPORT;
+
+          $jumlahPotongannya = $key->Jumlah_BPJS_KESEHATAN + $key->Jumlah_POTONGAN_KAS + $key->Jumlah_BPJS_KETENAGAKERJAAN + $key->Jumlah_POTONGAN_PINJAMAN + $key->Jumlah_POTONGAN_SERAGAM + $key->Jumlah_POTONGAN_CONSUMABLE + $key->Jumlah_BPJS_PENSIUN;
+
+          $grandTotalGaji = $jumlahGajinya - $jumlahPotongannya;
+
+          $Transfer['id'] = $key->id;
+          $Transfer['nip'] = $key->nip;
+          $Transfer['nama_pegawai'] = $key->nama_pegawai;
+          $Transfer['id_bank'] = $key->id_bank;
+          $Transfer['no_rekening'] = $key->no_rekening;
+          $Transfer['grandTotalGaji'] = $grandTotalGaji;
+
+          $nilaiTransfer[] = $Transfer;
+        }
+      }
+
+
+      $nilaiTransfer = collect($nilaiTransfer);
+
+      Excel::create('Proses Payroll Cash Periode -'.$getbatch->tanggal_proses.' s-d '.$getbatch->tanggal_proses_akhir, function($excel) use($getbatch,$nilaiTransfer) {
+        $excel->sheet("Salary Cash - ", function($sheet) use($getbatch,$nilaiTransfer) {
+          $sheet->loadView('pages.laporanPayroll.cashProses')
+                  ->with('getbatch', $getbatch)
+                  ->with('nilaiTransfer', $nilaiTransfer);
+        });
+      })->download('xlsx');
+
+      return response()->json(['success' => 200]);
+    }
+
+
     public function prosesClient($id)
     {
         $getCabangClient = DB::select("SELECT a.id, a.nama_cabang
@@ -574,7 +655,7 @@ class BatchPayrollLaporanController extends Controller
         $rekapslip[] = $slipPegawai;
         }
 
-// dd($rekapslip,$hasilQuery,$getkomponengajinya,$totalkerjabulan,$getCabangClient);
+        // dd($rekapslip,$hasilQuery,$getkomponengajinya,$totalkerjabulan,$getCabangClient);
 
         return view('pages.laporanPayroll.slipGaji', compact('rekapslip'));
     }
