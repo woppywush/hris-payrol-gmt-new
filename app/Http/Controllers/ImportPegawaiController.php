@@ -189,12 +189,9 @@ class ImportPegawaiController extends Controller
     public function proses()
     {
 
-      $timestamps = date('Y-m-d h:m:s');
-
       if(Input::hasFile('importPegawai')){
   			$path = Input::file('importPegawai')->getRealPath();
-  			$data = Excel::selectSheets('Data-Import')->load($path, function($reader) {
-  			})->get();
+  			$data = Excel::selectSheets('Data-Import')->load($path)->setDateColumns(['tanggal_lahir'])->get();
 
   			if(!empty($data) && $data->count()){
   				foreach ($data as $key) {
@@ -222,8 +219,8 @@ class ImportPegawaiController extends Controller
                          'id_jabatan'   => $key->id_jabatan,
                          'id_bank'   => $key->id_bank,
                          'status'       => 1,
-                         'created_at'   => $timestamps,
-                         'updated_at'   => $timestamps,
+                         'created_at'   => date('Y-m-d h:m:s'),
+                         'updated_at'   => date('Y-m-d h:m:s'),
                        ];
   				}
 

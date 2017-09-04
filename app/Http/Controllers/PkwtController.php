@@ -235,42 +235,42 @@ class PkwtController extends Controller
 
     public function saveChangesPKWT(Request $request)
     {
-      
-    //   $message = [
-    //     'tanggal_masuk_gmt.required' => 'Wajib di isi',
-    //     'tanggal_masuk_client.required' => 'Wajib di isi',
-    //     'tanggal_awal_pkwt.required' => 'Wajib di isi',
-    //     'tanggal_akhir_pkwt.required' => 'Wajib di isi',
-    //     'id_pegawai.required' => 'Wajib di isi',
-    //     'id_kelompok_jabatan.required' => 'Wajib di isi',
-    //     'id_cabang_client.required' => 'Wajib di isi',
-  		// ];
 
-  		// $validator = Validator::make($request->all(), [
-  		// 	'tanggal_masuk_gmt' => 'required',
-  		// 	'tanggal_masuk_client' => 'required',
-    //     'tanggal_awal_pkwt' => 'required',
-    //     'tanggal_akhir_pkwt' => 'required',
-    //     'id_pegawai' => 'required',
-    //     'id_kelompok_jabatan' => 'required',
-  		// 	'id_cabang_client' => 'required',
-  		// ], $message);
+      //   $message = [
+      //     'tanggal_masuk_gmt.required' => 'Wajib di isi',
+      //     'tanggal_masuk_client.required' => 'Wajib di isi',
+      //     'tanggal_awal_pkwt.required' => 'Wajib di isi',
+      //     'tanggal_akhir_pkwt.required' => 'Wajib di isi',
+      //     'id_pegawai.required' => 'Wajib di isi',
+      //     'id_kelompok_jabatan.required' => 'Wajib di isi',
+      //     'id_cabang_client.required' => 'Wajib di isi',
+    		// ];
 
-  		// if($validator->fails()){
-  		// 	return redirect()->route('pkwt.detail', ['id' => $request->nip])->withErrors($validator)->withInput()->with('gagal');
-  		// }
-      // dd($request);
-      $set = HrPkwt::find($request->id_pkwt_change);
-      $set->tanggal_masuk_gmt = $request->tanggal_masuk_gmt;
-      $set->tanggal_masuk_client = $request->tanggal_masuk_client;
-      $set->tanggal_awal_pkwt = $request->tanggal_awal_pkwt;
-      $set->tanggal_akhir_pkwt = $request->tanggal_akhir_pkwt;
-      $set->status_karyawan_pkwt = $request->status_karyawan_pkwt;
-      $set->status_pkwt = $request->status_pkwt;
-      $set->id_kelompok_jabatan = $request->id_kelompok_jabatan;
-      $set->save();
+    		// $validator = Validator::make($request->all(), [
+    		// 	'tanggal_masuk_gmt' => 'required',
+    		// 	'tanggal_masuk_client' => 'required',
+      //     'tanggal_awal_pkwt' => 'required',
+      //     'tanggal_akhir_pkwt' => 'required',
+      //     'id_pegawai' => 'required',
+      //     'id_kelompok_jabatan' => 'required',
+    		// 	'id_cabang_client' => 'required',
+    		// ], $message);
 
-      return redirect()->route('pkwt.detail', $request->nip)->with('message', 'Berhasil mengubah data PKWT.');
+    		// if($validator->fails()){
+    		// 	return redirect()->route('pkwt.detail', ['id' => $request->nip])->withErrors($validator)->withInput()->with('gagal');
+    		// }
+        // dd($request);
+        $set = HrPkwt::find($request->id_pkwt_change);
+        $set->tanggal_masuk_gmt = $request->tanggal_masuk_gmt;
+        $set->tanggal_masuk_client = $request->tanggal_masuk_client;
+        $set->tanggal_awal_pkwt = $request->tanggal_awal_pkwt;
+        $set->tanggal_akhir_pkwt = $request->tanggal_akhir_pkwt;
+        $set->status_karyawan_pkwt = $request->status_karyawan_pkwt;
+        $set->status_pkwt = $request->status_pkwt;
+        $set->id_kelompok_jabatan = $request->id_kelompok_jabatan;
+        $set->save();
+
+        return redirect()->route('pkwt.detail', $request->nip)->with('message', 'Berhasil mengubah data PKWT.');
     }
 
     public function terminatePKWT(Request $request)
@@ -417,68 +417,45 @@ class PkwtController extends Controller
     {
         $timestamps = date('Y-m-d h:m:s');
 
-        if(Input::hasFile('importPkwt')){
+        if(Input::hasFile('importPkwt'))
+        {
           $path = Input::file('importPkwt')->getRealPath();
-          $data = Excel::selectSheets('Data-Import')->load($path, function($reader) {})->get();
+          $data = Excel::selectSheets('Data-Import')
+                        ->load($path)
+                        ->setDateColumns(['tanggal_masuk_gmt','tanggal_masuk_client','tanggal_awal_pkwt','tanggal_akhir_pkwt'])
+                        ->get();
 
           $getPegawai = MasterPegawai::select('id','nip')->where('status', 1)->get();
           $getCabang = MasterClientCabang::select('id', 'kode_cabang')->get();
           $getPkwt = HrPkwt::where('status_pkwt', 1)->where('flag_terminate', 1)->get();
 
-          if(!empty($data) && $data->count()){
+          if(!empty($data) && $data->count())
+          {
             foreach ($data as $key) {
 
-              foreach ($getPegawai as $pegawai) {
-                if($pegawai->nip == $key->nip){
+              foreach ($getPegawai as $pegawai)
+              {
+                if($pegawai->nip == $key->nip)
+                {
                   $nip = $pegawai->id;
                 }
               }
 
-              foreach ($getPegawai as $spv) {
-                if($spv->nip == $key->nip_spv){
+              foreach ($getPegawai as $spv)
+              {
+                if($spv->nip == $key->nip_spv)
+                {
                   $nip_spv = $spv->id;
                 }
               }
 
-              foreach ($getCabang as $cabang) {
-                if($cabang->kode_cabang == $key->kode_cabang){
+              foreach ($getCabang as $cabang)
+              {
+                if($cabang->kode_cabang == $key->kode_cabang)
+                {
                   $cabangnya = $cabang->id;
                 }
               }
-
-              // foreach ($getPkwt as $pkwt) {
-              //   if($pkwt->id_pegawai == $nip){
-              //     if($pkwt->tanggal_akhir_pkwt < $key->tanggal_awal_pkwt){
-              //       $insert[] = ['id_pegawai'           => $nip,
-              //                    'id_cabang_client'     => $cabangnya,
-              //                    'id_kelompok_jabatan'  => $nip_spv,
-              //                    'tanggal_masuk_gmt'    => $key->tanggal_masuk_gmt,
-              //                    'tanggal_masuk_client' => $key->tanggal_masuk_client,
-              //                    'tanggal_awal_pkwt'    => $key->tanggal_awal_pkwt,
-              //                    'tanggal_akhir_pkwt'   => $key->tanggal_akhir_pkwt,
-              //                    'status_karyawan_pkwt' => $key->status_karyawan_pkwt,
-              //                    'status_pkwt'          => $key->status_pkwt,
-              //                    'flag_terminate'       => 1,
-              //                    'created_at'           => $timestamps,
-              //                    'updated_at'           => $timestamps,
-              //                  ];
-              //     }else{
-              //       $gagal[] = ['id_pegawai'           => $nip,
-              //                    'id_cabang_client'     => $cabangnya,
-              //                    'id_kelompok_jabatan'  => $nip_spv,
-              //                    'tanggal_masuk_gmt'    => $key->tanggal_masuk_gmt,
-              //                    'tanggal_masuk_client' => $key->tanggal_masuk_client,
-              //                    'tanggal_awal_pkwt'    => $key->tanggal_awal_pkwt,
-              //                    'tanggal_akhir_pkwt'   => $key->tanggal_akhir_pkwt,
-              //                    'status_karyawan_pkwt' => $key->status_karyawan_pkwt,
-              //                    'status_pkwt'          => $key->status_pkwt,
-              //                    'flag_terminate'       => 1,
-              //                    'created_at'           => $timestamps,
-              //                    'updated_at'           => $timestamps,
-              //                  ];
-              //     }
-              //   }
-              // }
 
               $insert[] = ['id_pegawai'           => $nip,
                            'id_cabang_client'     => $cabangnya,
