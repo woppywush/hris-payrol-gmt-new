@@ -12,6 +12,7 @@ use App\Models\HrBahasaAsing;
 use App\Models\HrDataKeluarga;
 use App\Models\MasterJabatan;
 use App\Models\MasterPegawai;
+use App\Models\MasterBank;
 use App\Models\HrDokumenPegawai;
 use App\Models\HrDataPeringatan;
 use App\Models\HrHistoriPegawai;
@@ -35,7 +36,7 @@ class SetGajiController extends Controller
 
     public function index()
     {
-      return view('pages/setgajipegawai');
+      return view('pages.setGajiPegawai.index');
     }
 
     public function detailpegawai($id)
@@ -68,8 +69,9 @@ class SetGajiController extends Controller
                           ->get();
       $DataPeringatan = HrDataPeringatan::where('id_pegawai', '=', $idofpegawai)->get();
       $DataHistoriPegawai = HrHistoriPegawai::where('id_pegawai', $idofpegawai)->get();
+      $DataBank = MasterBank::select('id', 'nama_bank')->get();
 
-      return view('pages/MasterPegawai/lihatdatapegawai', compact('DataJabatan', 'DataPegawai', 'DataKeluarga', 'DataPendidikan', 'DataPengalaman', 'DataKomputer', 'DataBahasa', 'DataKesehatan', 'DataPenyakit', 'DokumenPegawai', 'DataPKWT', 'DataPeringatan', 'DataHistoriPegawai'));
+      return view('pages.masterpegawai.lihat', compact('DataJabatan', 'DataPegawai', 'DataKeluarga', 'DataPendidikan', 'DataPengalaman', 'DataKomputer', 'DataBahasa', 'DataKesehatan', 'DataPenyakit', 'DokumenPegawai', 'DataPKWT', 'DataPeringatan', 'DataHistoriPegawai', 'DataBank'));
     }
 
     public function getdata()
@@ -103,6 +105,7 @@ class SetGajiController extends Controller
     public function bind($id)
     {
       $get = MasterPegawai::find($id);
+
       return $get;
     }
 

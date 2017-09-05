@@ -13,7 +13,7 @@
     Lihat Data Pegawai
   </h1>
   <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li><a href="{{ route('dashboard') }}"><i class="fa fa-dashboard"></i> Home</a></li>
     @if (session('level') == 1 || session('level') == 3)
       <li><a href="{{ url('masterpegawai')}}"> Master Pegawai</a></li>
     @elseif (session('level') == 2)
