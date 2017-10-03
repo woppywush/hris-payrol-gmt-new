@@ -2,6 +2,7 @@
 
 @section('title')
     <title>Kelola History Gaji Pokok Pegawai</title>
+    <link rel="stylesheet" href="{{asset('plugins/datatables/dataTables.bootstrap.css')}}">
 @stop
 
 @section('breadcrumb')
@@ -163,7 +164,6 @@
                 <table id="table_histori" class="table table-hover">
                   <thead>
                     <tr>
-                      <th>#</th>
                       <th>NIP</th>
                       <th>Nama Pegawai</th>
                       <th>Nomor Telepon</th>
@@ -177,7 +177,6 @@
                   </thead>
                   <tfoot>
                     <tr>
-                        <td>#</td>
                         <th></th>
                         <th></th>
                         <th></th>
@@ -189,28 +188,6 @@
                         <th></th>
                     </tr>
                 </tfoot>
-                  <tbody>
-                    <?php $no = 1; ?>
-                    @foreach ($gethistorygajipokok as $key)
-                    <tr>
-                      <td>{{ $no }}</td>
-                      <td>{{ $key->nip_pegawai }}</td>
-                      <td>{{ $key->nama_pegawai }}</td>
-                      <td>{{ $key->no_telp_pegawai }}</td>
-                      <td>{{ $key->periode_tahun }}</td>
-                      <td>Rp. {{ number_format($key->gaji_pokok,0,',','.') }},-</td>
-                      <td>{{ \Carbon\Carbon::parse($key->created_at)->format('d-M-y')}} / {{ \Carbon\Carbon::parse($key->created_at)->format('H:i:s')}}</td>
-                      <td>{{ $key->nama_client }}</td>
-                      <td>{{ $key->nama_cabang }}</td>
-                      @if ($key->status_pegawai == 0)
-                        <td style="text-align:center"><span class="badge bg-red">Tidak Aktif</span></td>
-                      @else
-                        <td style="text-align:center"><span class="badge bg-green">Aktif</span></td>
-                      @endif
-                    </tr>
-                    <?php $no++; ?>
-                    @endforeach
-                  </tbody>
                 </table>
               </div>
             </div>
@@ -227,7 +204,8 @@
 
   <script src="{{asset('plugins/jQuery/jQuery-2.1.4.min.js')}}"></script>
   <script src="{{asset('bootstrap/js/bootstrap.min.js')}}"></script>
-  {{-- <script src="{{asset('plugins/iCheck/icheck.min.js')}}"></script> --}}
+  <script src="{{asset('plugins/datatables/jquery.dataTables.min.js')}}"></script>
+  <script src="{{asset('plugins/datatables/dataTables.bootstrap.min.js')}}"></script>
   <script src="{{asset('plugins/fastclick/fastclick.min.js')}}"></script>
   <script src="{{asset('dist/js/app.min.js')}}"></script>
   <script src="{{asset('dist/js/demo.js')}}"></script>
@@ -235,8 +213,27 @@
   <script src="{{ asset('plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
   <script src="{{asset('plugins/select2/select2.full.min.js')}}"></script>
   <script type="text/javascript">
-    $("#table_histori").DataTable();
+    $(function() {
+        $('#table_histori').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: '{!! route('datatables.data.history') !!}',
+            column: [
+              {data: '0', name: 'nip_pegawai'},
+              {data: '1', name: 'nama_pegawai'},
+              {data: '2', name: 'no_telp_pegawai'},
+              {data: '3', name: 'periode_tahun'},
+              {data: '4', name: 'gaji_pokok'},
+              {data: '5', name: 'created_at'},
+              {data: '6', name: 'nama_client'},
+              {data: '7', name: 'nama_cabang'},
+              {data: '8', name: 'status_pegawai'}
+            ]
+        });
+      });
   </script>
+
+    
   <script type="text/javascript">
     $(document).ready(function(){
       $(".select2").select2();

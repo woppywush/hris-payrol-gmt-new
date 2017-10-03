@@ -13,6 +13,7 @@ use App\Models\PrHistoriGajiPokokPerClient;
 
 use DB;
 use Validator;
+use Datatables;
 
 class HistoryGajiPokokController extends Controller
 {
@@ -33,16 +34,30 @@ class HistoryGajiPokokController extends Controller
 
       $getlistClientNew = collect($listNew);
 
-      $gethistorygajipokok = PrHistoriGajiPokok::leftJoin('master_pegawai', 'pr_histori_gaji_pokok.id_pegawai', '=', 'master_pegawai.id')
-                        ->leftJoin('master_client_cabang', 'pr_histori_gaji_pokok.id_cabang_client', '=', 'master_client_cabang.id')
-                        ->leftJoin('master_client', 'master_client_cabang.id_client', '=', 'master_client.id')
-                        ->select('pr_histori_gaji_pokok.*', 'master_pegawai.nip as nip_pegawai', 'master_pegawai.nama as nama_pegawai', 'master_pegawai.tanggal_lahir as tanggal_lahir_pegawai',
-                         'master_pegawai.no_telp as no_telp_pegawai', 'master_pegawai.status as status_pegawai',
-                         'master_client.id as client_id', 'master_client.kode_client as kode_client', 'master_client.nama_client as nama_client',
-                         'master_client_cabang.nama_cabang', 'master_client_cabang.alamat_cabang')
-                        ->get();
+      return view('pages.gaji.gajiPokok', compact('getlistClientNew'));
+    }
 
-      return view('pages.gaji.gajiPokok', compact('getlistClientNew', 'gethistorygajipokok'));
+    public function getDataForDataTable()
+    {
+      $gethistorygajipokok = PrHistoriGajiPokok::select(['master_pegawai.nip as nip_pegawai', 'master_pegawai.nama as nama_pegawai', 
+          'master_pegawai.no_telp as no_telp_pegawai', 'pr_histori_gaji_pokok.periode_tahun', 'pr_histori_gaji_pokok.gaji_pokok',
+          'pr_histori_gaji_pokok.created_at', 'master_client.nama_client as nama_client', 'master_client_cabang.nama_cabang',
+          DB::raw("if(master_pegawai.status = 1, 'Aktif', 'Tidak Aktif') as status")])
+        ->leftJoin('master_pegawai', 'pr_histori_gaji_pokok.id_pegawai', '=', 'master_pegawai.id')
+        ->leftJoin('master_client_cabang', 'pr_histori_gaji_pokok.id_cabang_client', '=', 'master_client_cabang.id')
+        ->leftJoin('master_client', 'master_client_cabang.id_client', '=', 'master_client.id')
+        ->get();
+
+        return Datatables::of($gethistorygajipokok)
+        ->editColumn('status', function($user){
+          if ($user->status=="Aktif") {
+            return "<span class='badge bg-green'>Aktif</span>";
+          } else {
+            return "<span class='badge bg-red'>Tidak Aktif</span>";
+          }
+        })
+        ->make();
+        
     }
 
     public function store(Request $request)

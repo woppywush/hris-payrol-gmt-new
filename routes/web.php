@@ -290,6 +290,7 @@ Route::post('pengecualian-client/delete', 'PengecualianClientController@delete')
 ///// HISTORY GAJI POKOK /////
 Route::get('history-gaji-pokok', 'HistoryGajiPokokController@index')->name('historygajipokok.index');
 Route::post('history-gaji-pokok', 'HistoryGajiPokokController@store')->name('historygajipokok.store');
+Route::get('datatables-history', ['as'=>'datatables.data.history', 'uses'=>'HistoryGajiPokokController@getDataForDataTable']);
 
 ///// CUTI //////
 Route::get('cuti', 'CutiController@index')->name('cuti.index');
