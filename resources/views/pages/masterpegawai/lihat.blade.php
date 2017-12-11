@@ -2690,6 +2690,7 @@
                 <tr class="bg-navy">
                   <th>#</th>
                   <th>Keterangan</th>
+                  <th>Tanggal</th>
                   @if (session('level') == 1)
                     <th>Aksi</th>
                   @endif
@@ -2700,6 +2701,7 @@
                     <tr>
                       <td>{{$i++}}</td>
                       <td>{{$key->keterangan}}</td>
+                      <td>{{date('Y-m-d', strtotime($key->created_at))}}</td>
                       @if (session('level') == 1)
                         <td>
                           <span data-toggle="tooltip" title="Edit Data">

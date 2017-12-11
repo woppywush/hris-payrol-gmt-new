@@ -79,7 +79,8 @@ class PeriodeGajiController extends Controller
 
       $checkhistory = PrHistoriGajiPokok::where('id_pegawai', $request->id)->first();
       if ($checkhistory != null) {
-        $set2 = PrHistoryGajiPokok::where('id_pegawai', $request->id)->orderBy('created_at', 'desc')->first();
+        
+        $set2 = PrHistoriGajiPokok::where('id_pegawai', $request->id)->orderBy('created_at', 'desc')->first();
         $set2->gaji_pokok = $request->gaji_pokok;
         $set2->save();
       } else {
